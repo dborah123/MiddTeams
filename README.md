@@ -4,7 +4,7 @@
 ### about
 TODO: a few sentences describing your project
 
-view our website [here]()
+view our website [here](https://dborah123.github.io/MiddTeams/)
 
 ### building
 TODO: how can someone build your project, starting from the GitHub clone/download, installing dependencies and compiling.
