@@ -1,0 +1,15 @@
+{
+    "git.ignoreLimitWarning": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "middteamsdb",
+            "database": "middteamsdb",
+            "username": "middteams",
+            "password": "middteams123"
+        }
+    ]
+}
