@@ -11,10 +11,7 @@ class Coach(models.Model):
     # Coach Specific Attributes
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
     profile_picture = models.ImageField(upload_to='avatars', default='no_picture.png')
-    email = models.EmailField(max_length=200)
     team = models.ForeignKey(Team, on_delete=models.SET(True))
 
     created = models.DateTimeField(auto_now_add=True)
@@ -31,17 +28,15 @@ class Coach(models.Model):
     
 
 class Athlete(models.Model):
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
     profile_picture = models.ImageField(upload_to='avatars', default='no_picture.png')
-    email = models.EmailField(max_length=200)
     team = models.ForeignKey(Team, on_delete=models.SET(True))
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     # Athlete Specific Attributes
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     captain = models.BooleanField(default=False)
     position = models.CharField(max_length=200)
 
