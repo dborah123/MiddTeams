@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from accounts.models import Coach
+from teams.models import Team
 from .forms import CoachCreationForm, AthleteCreationForm
 from django.contrib.auth.models import User
 
@@ -10,6 +11,8 @@ def create_coach_view(request):
     coach_create_form = CoachCreationForm()
     email_taken = False
 
+
+    # If user submitted form
     if(request.method == "POST"):
 
         # Creating user model
@@ -40,9 +43,9 @@ def create_coach_view(request):
             Coach.objects.create(
                                     user=user,
                                     profile_picture=profile_pic,
-                                    team=team,
+                                    team=Team.objects.get(pk=team),
                                     formal_title=formal_title,
-                                    phone_number=phone_number
+                                    phone_number=phone_number,
                                 )
             # TODO: render login page here
 
@@ -53,6 +56,7 @@ def create_coach_view(request):
     }
 
     return render(request, 'accounts/create-coach.html', context)
+
 
 def create_athlete_view(request):
     athlete_create_form = AthleteCreationForm()
