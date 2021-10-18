@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from accounts.models import Athlete, Coach
 from teams.models import Team
-from .forms import CoachCreationForm, AthleteCreationForm
+from .forms import CoachCreationForm, AthleteCreationForm, CoachForm
 from django.contrib.auth.models import User
 
 # Create your views here.
@@ -115,3 +115,53 @@ def create_athlete_view(request):
     }
 
     return render(request, 'accounts/create-athlete.html', context)
+
+
+def profile_view(request):
+
+    # Query if the user is a coach
+    is_coach_user = Coach.objects.get(user=request.user)
+
+    # Redirect user depending on type of user
+    if(is_coach_user):
+        return coach_profile_view(request)
+    else:
+        return athlete_profile_view(request)
+
+
+def coach_profile_view(request):
+
+    coach_profile = Coach.objects.get(user=request.user)
+    coach_profile_form = CoachForm(request.POST or None, request.FILES or None, instance=coach_profile)
+    profile_changed = False
+
+    if(coach_profile_form.is_valid()):
+        coach_profile_form.save()
+        profile_changed = True
+
+    context = {
+        'profile_changed': profile_changed,
+        'coach_profile': coach_profile,
+        'coach_profile_form': coach_profile_form,
+    }
+
+    return render(request, "accounts/coach-profile.html", context)
+
+
+def athlete_profile_view(request):
+
+    athlete_profile = Athlete.objects.get(user=request.user)
+    athlete_profile_form = CoachForm(request.POST or None, request.FILES or None, instance=athlete_profile)
+    profile_changed = False
+
+    if(athlete_profile_form.is_valid()):
+        athlete_profile_form.save()
+        profile_changed = True
+
+    context = {
+        'profile_changed': profile_changed,
+        'athlete_profile': athlete_profile,
+        'athlete_profile_form': athlete_profile_form,
+    }
+
+    return render(request, "accounts/athlete-profile.html", context)

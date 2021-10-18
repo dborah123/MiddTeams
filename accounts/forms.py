@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth import models
+from accounts.models import Coach
 from teams.models import Team
 
 class CoachCreationForm(forms.Form):
@@ -21,3 +23,11 @@ class AthleteCreationForm(forms.Form):
     team = forms.ModelChoiceField(queryset=Team.objects.all())
     team_code = forms.CharField(max_length=20)
     position = forms.CharField(max_length=200)
+
+class CoachForm(forms.ModelForm):
+    class Meta:
+        model = Coach
+        exclude = (
+            'user',
+            'secret_key'
+        )
