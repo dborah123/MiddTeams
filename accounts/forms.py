@@ -1,12 +1,14 @@
 from django import forms
-from django.contrib.auth import models
-from accounts.models import Coach
+from django.contrib.auth.models import User
+from django.db.models import fields
+from accounts.models import Athlete, Coach
 from teams.models import Team
 
 class CoachCreationForm(forms.Form):
     first_name = forms.CharField(max_length=200)
     last_name = forms.CharField(max_length=200)
     password = forms.CharField(max_length=200, widget=forms.PasswordInput())
+    password_check = forms.CharField(max_length=200, widget=forms.PasswordInput())
     profile_picture = forms.ImageField()
     email = forms.EmailField(max_length=200)
     team = forms.ModelChoiceField(queryset=Team.objects.all())
@@ -17,17 +19,68 @@ class CoachCreationForm(forms.Form):
 class AthleteCreationForm(forms.Form):
     first_name = forms.CharField(max_length=200)
     last_name = forms.CharField(max_length=200)
-    password = forms.CharField(max_length=200)
+    password = forms.CharField(max_length=200, widget=forms.PasswordInput())
+    password_check = forms.CharField(max_length=200, widget=forms.PasswordInput())
     email = forms.EmailField(max_length=200)
     profile_picture = forms.ImageField()
     team = forms.ModelChoiceField(queryset=Team.objects.all())
     team_code = forms.CharField(max_length=20)
     position = forms.CharField(max_length=200)
 
+
 class CoachForm(forms.ModelForm):
+
     class Meta:
         model = Coach
+
+        fields = (
+            'profile_picture',
+            'team',
+            'formal_title',
+            'phone_number',
+        )
+
         exclude = (
             'user',
             'secret_key'
         )
+
+    def __init__(self, *args, **kwargs):
+        super(CoachForm, self).__init__(*args, **kwargs)
+        self.fields['team'].disabled = True
+
+
+class AthleteForm(forms.ModelForm):
+
+    class Meta:
+        model = Athlete
+
+        fields = (
+            'profile_picture',
+            'team',
+            'position',
+        )
+
+        exclude = (
+            'user',
+            'secret_key',
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(AthleteForm, self).__init__(*args, **kwargs)
+        self.fields['team'].disabled = True
+
+class UserForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+
+        fields = (
+            'email',
+            'username',
+        )
+
+class PasswordForm(forms.Form):
+    old_password = forms.CharField(max_length=200, widget=forms.PasswordInput())
+    new_password = forms.CharField(max_length=200, widget=forms.PasswordInput())
+    new_password_again = forms.CharField(max_length=200, widget=forms.PasswordInput())

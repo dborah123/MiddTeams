@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block scripts %}
-
+    <script src="{% static 'accounts/index.js' %}"></script>
 {% endblock scripts %}
 
 {% block title %}
@@ -11,15 +11,62 @@
 {% endblock title %}
 
 {% block content %}
+
+    <h2>{{user.first_name}}'s Profile</h2>
+
     <div class="text-center">
         <img src="{{coach_profile.avatar.url}}" alt="my-profile" class="avatar-big">
     </div>
 
+    <div id="alert-box-0"></div>
+    <div id="alert-box-1"></div>
+
     <form action="" method="POST" enctype="multipart/form-data" class="profile-form">
         {% csrf_token %}
         {{coach_profile_form|crispy}}
-        <button type="submit" class="btn btn-primary mb-2 mt-2">update</button>
+        Account Information:
+        {{user_form|crispy}}
+        <button type="submit" class="btn btn-primary mb-2 mt-2">Update</button>
     </form>
 
+    <hr>
+
+    <form action="" method="POST" enctype="multipart/form-data" class="profile-form">
+        <h2>Change Password</h2>
+        {% csrf_token %}
+        {{password_form|crispy}}
+        <button type="submit" class="btn btn-primary mb-2 mt-2">Change Password</button>
+    </form>
+
+{% comment %} Scripts {% endcomment %}
+
+<script type="text/javascript">
+
+    console.log("here");
+    console.log({{profile_changed}});
+
+    if ({{profile_changed}}) {
+        handleAlerts("success", "Successfully edited profile", "0");
+    }
+
+    switch ({{password_key}}) {
+
+        case 0:
+            handleAlerts("success", "Successfully changed password", "1");
+            break;
+        
+        case 1:
+            handleAlerts("danger", "Old password is incorrect", "1");
+            break;
+        
+        case 2:
+            handleAlerts("danger", "Passwords don't match", "1");
+            break;
+
+        default:
+    }
+
+</script>
+    
 {% endblock content %}
 
