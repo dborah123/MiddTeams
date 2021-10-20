@@ -1,0 +1,43 @@
+{
+  "title": "jQuery Schedule",
+  "name": "jquery-schedule",
+  "version": "2.1.0",
+  "description": "A schedule management with jQuery.",
+  "keywords": [
+    "schedule",
+    "scheduler",
+    "management",
+    "calendar",
+    "jquery",
+    "plugin"
+  ],
+  "author": {
+    "name": "Thomas BORUSZEWSKI",
+    "email": "yehzuna@outlook.com"
+  },
+  "homepage": "https://github.com/Yehzuna/jquery-schedule",
+  "main": "dist/jquery.schedule.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yehzuna/jquery-schedule.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Yehzuna/jquery-schedule/issues"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-banner": "^0.6.0",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-compass": "^1.1.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^3.2.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-remove-logging": "^0.2.0"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "jquery-ui": "^1.12.1"
+  }
+}

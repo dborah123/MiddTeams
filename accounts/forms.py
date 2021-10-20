@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.db.models import fields
-from accounts.models import Athlete, Coach
+from accounts.models import Athlete, Coach, ScheduleItem
 from teams.models import Team
 
 class CoachCreationForm(forms.Form):
@@ -80,7 +80,46 @@ class UserForm(forms.ModelForm):
             'username',
         )
 
+
 class PasswordForm(forms.Form):
     old_password = forms.CharField(max_length=200, widget=forms.PasswordInput())
     new_password = forms.CharField(max_length=200, widget=forms.PasswordInput())
     new_password_again = forms.CharField(max_length=200, widget=forms.PasswordInput())
+
+
+class ScheduleItemForm(forms.ModelForm):
+
+    class Meta(object):
+        model = ScheduleItem
+
+        fields = (
+            'name',
+            'time_start',
+            'time_end',
+            'day',
+        )
+
+        widgets = {
+            'name': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'test'
+                }
+            ),
+            'time_start': forms.TimeInput(
+                attrs={
+                    'class': "form-control"
+                }
+            )
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ScheduleItemForm, self).__init__(*args, **kwargs)
+        self.fields['name'].label = ""
+        self.fields['time_start'].label = ""
+        self.fields['time_end'].label = ""
+        self.fields['day'].label = ""        
+
+
+
+

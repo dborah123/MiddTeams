@@ -47,7 +47,7 @@ class Athlete(models.Model):
 
 
 class ScheduleItem(models.Model):
-    user = models.ForeignKey(Athlete, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     time_start = models.TimeField()
     time_end = models.TimeField()

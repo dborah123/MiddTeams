@@ -1,10 +1,11 @@
 from django.shortcuts import render
 
-from accounts.models import Athlete, Coach
+from accounts.models import Athlete, Coach, ScheduleItem
 from accounts.utils import change_password
 from teams.models import Team
-from .forms import AthleteForm, CoachCreationForm, AthleteCreationForm, CoachForm, PasswordForm, UserForm
+from .forms import AthleteForm, CoachCreationForm, AthleteCreationForm, CoachForm, PasswordForm, ScheduleItemForm, UserForm
 from django.contrib.auth.models import User
+import datetime
 
 # Create your views here.
 def create_coach_view(request):
@@ -148,6 +149,7 @@ def coach_profile_view(request):
 
     # Get user and create form
     user = request.user
+    print(user.pk)
     user_form = UserForm(request.POST or None, request.FILES or None, instance=user)
 
     # Get coach and create form
@@ -261,3 +263,33 @@ def athlete_profile_view(request):
 
     return render(request, "accounts/athlete-profile.html", context)
 
+
+def schedule_view(request, **kwargs):
+    """
+    Collects schedule of Athlete designated by pk and passes it to js, displaying schedule
+    """
+
+    # Get pk and user
+    pk = kwargs.get('pk')
+    user = User.objects.get(pk=pk)
+
+    schedule_item_form = ScheduleItemForm()
+
+    schedule_data = None
+
+    # Getting data for schedule in two parts: schedule items (ie classes) and workouts scheduled
+
+    # Getting ScheduleItems
+
+    # Querying all ScheduleItems in the database
+    schedule_items = ScheduleItem.objects.filter(user=user)
+
+    print(schedule_items)
+
+    
+    context = {
+        'schedule_data': schedule_data,
+        'schedule_item_form': schedule_item_form,
+    }
+
+    return render(request, 'accounts/schedule.html', context)

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block scripts %}
+
+{% endblock scripts %}
+
+{% block title %}
+    schedule
+{% endblock title %}
+
+{% block content %}
+
+    {% comment %} <form action="" method="POST">
+        {% csrf_token %}
+        {{schedule_item_form.name|as_crispy_field}}
+
+        <button type="submit" class="btn btn-primary mb-2 mt-2">Add item to schedule</button>
+    </form> {% endcomment %}
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+
+            <label class="input-group-text" for="inputGroupSelect01">Description</label>
+            {{schedule_item_form.name|as_crispy_field}}
+            
+        </div>
+
+        <div class="input-group mb-3">
+
+            <label class="input-group-text" for="inputGroupSelect01">Start Time</label>
+            {{schedule_item_form.time_start|as_crispy_field}}
+            {% comment %} <input type="time" class="form-control" aria-label="Username" name="start_time" required> {% endcomment %}
+
+        </div>
+
+        <div class="input-group mb-3">
+
+            <label class="input-group-text" for="inputGroupSelect01">End Time</label>
+            <input type="time" class="form-control" aria-label="Username" name="end_time" required>
+
+        </div>
+
+        <div class="input-group mb-3">
+
+                <label class="input-group-text" for="inputGroupSelect01">Day of the Week</label>
+                <select class="form-select" id="inputGroupSelect01">
+                    <option selected>Choose...</option>
+                    <option value="0">Monday</option>
+                    <option value="1">Tuesday</option>
+                    <option value="2">Wednesday</option>
+                    <option value="3">Thursday</option>
+                    <option value="4">Friday</option>
+                    <option value="5">Saturday</option>
+                    <option value="6">Sunday</option>
+                </select>
+
+        </div>
+
+        <button type="submit" class="btn btn-primary mb-2 mt-2">Add item to schedule</button>
+
+    </form>
+
+{% endblock content %}
+
+
