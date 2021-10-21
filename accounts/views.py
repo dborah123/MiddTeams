@@ -162,7 +162,7 @@ def coach_profile_view(request):
     password_key = -1
 
     # Change password
-    if (request.method == "POST" and "change-password-button" in request.POST):
+    if (request.method == "POST" and "change-password-btn" in request.POST):
 
         # Get inputs
         old_password = request.POST.get("old_password")
@@ -221,7 +221,7 @@ def athlete_profile_view(request):
     password_key = -1
 
     # Change password
-    if(request.method == "POST" and "change-password-button" in request.POST):
+    if(request.method == "POST" and "change-password-btn" in request.POST):
 
         # Get inputs
         old_password = request.POST.get("old_password")
@@ -273,9 +273,13 @@ def schedule_view(request, **kwargs):
     pk = kwargs.get('pk')
     user = User.objects.get(pk=pk)
 
-    schedule_item_form = ScheduleItemForm()
-
+    schedule_item_form = ScheduleItemForm(request.POST or None)
     schedule_data = None
+
+    # Create blank ScheduleItem
+    schedule_item = ScheduleItem.objects.create(user=user, name=None, time_start=None, time_end=None, day=None)
+
+    print(schedule_item.user)
 
     # Getting data for schedule in two parts: schedule items (ie classes) and workouts scheduled
 
@@ -284,7 +288,17 @@ def schedule_view(request, **kwargs):
     # Querying all ScheduleItems in the database
     schedule_items = ScheduleItem.objects.filter(user=user)
 
-    print(schedule_items)
+    if(request.method == "POST" 
+        and schedule_item_form.is_valid() 
+        and "create-si-btn" in request.POST):
+        
+        schedule_item = schedule_item_form.save(commit=False)
+        schedule_item.user=user
+        schedule_item.save()
+
+
+        
+    
 
     
     context = {

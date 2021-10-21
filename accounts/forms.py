@@ -1,8 +1,20 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.db.models import fields
+from django.forms.widgets import Select
 from accounts.models import Athlete, Coach, ScheduleItem
 from teams.models import Team
+
+DAY_CHOICES = (
+    (-1,"Choose..."),
+    (0, "Monday"),
+    (1, "Tuesday"),
+    (2, "Wednesday"),
+    (3, "Thursday"),
+    (4, "Friday"),
+    (5, "Saturday"),
+    (6, "Sunday"),
+)
 
 class CoachCreationForm(forms.Form):
     first_name = forms.CharField(max_length=200)
@@ -89,6 +101,8 @@ class PasswordForm(forms.Form):
 
 class ScheduleItemForm(forms.ModelForm):
 
+    day = forms.ChoiceField(choices=DAY_CHOICES, widget=forms.Select(attrs={'class':'form-select'}))
+
     class Meta(object):
         model = ScheduleItem
 
@@ -103,14 +117,20 @@ class ScheduleItemForm(forms.ModelForm):
             'name': forms.TextInput(
                 attrs={
                     'class': 'form-control',
-                    'placeholder': 'test'
                 }
             ),
             'time_start': forms.TimeInput(
                 attrs={
+                    'type': 'time',
                     'class': "form-control"
                 }
-            )
+            ),
+            'time_end': forms.TimeInput(
+                attrs={
+                    'type': 'time',
+                    'class': "form-control"
+                }
+            ),
         }
 
     def __init__(self, *args, **kwargs):
@@ -118,8 +138,6 @@ class ScheduleItemForm(forms.ModelForm):
         self.fields['name'].label = ""
         self.fields['time_start'].label = ""
         self.fields['time_end'].label = ""
-        self.fields['day'].label = ""        
+        self.fields['day'].label = "" 
 
-
-
-
+    
