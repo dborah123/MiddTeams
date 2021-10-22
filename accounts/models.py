@@ -47,11 +47,11 @@ class Athlete(models.Model):
 
 
 class ScheduleItem(models.Model):
-    user = models.ForeignKey(Athlete, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
-    time_start = models.TimeField()
-    time_end = models.TimeField()
-    day = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200, blank=True, null=True)
+    time_start = models.TimeField(blank=True, null=True)
+    time_end = models.TimeField(blank=True, null=True)
+    day = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.name
