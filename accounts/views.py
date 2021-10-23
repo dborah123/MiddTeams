@@ -276,10 +276,21 @@ def schedule_view(request, **kwargs):
     schedule_item_form = ScheduleItemForm(request.POST or None)
     schedule_data = None
 
-    # Create blank ScheduleItem
-    schedule_item = ScheduleItem.objects.create(user=user, name=None, time_start=None, time_end=None, day=None)
 
-    print(schedule_item.user)
+    # LOOK HERE FOR HOW TO SAVE
+    if(request.method == "POST" 
+        and schedule_item_form.is_valid() 
+        and request.POST.get("submit")):
+
+        schedule_item = schedule_item_form.save(commit=False)
+        schedule_item.user=user
+
+
+        if (schedule_item.valid()):
+            schedule_item.save()
+
+        schedule_item_form = ScheduleItemForm()
+
 
     # Getting data for schedule in two parts: schedule items (ie classes) and workouts scheduled
 
@@ -288,17 +299,9 @@ def schedule_view(request, **kwargs):
     # Querying all ScheduleItems in the database
     schedule_items = ScheduleItem.objects.filter(user=user)
 
-    if(request.method == "POST" 
-        and schedule_item_form.is_valid() 
-        and "create-si-btn" in request.POST):
-        
-        schedule_item = schedule_item_form.save(commit=False)
-        schedule_item.user=user
-        schedule_item.save()
-
-
-        
-    
+    # for item in schedule_items:
+    #         print(item)
+    #         print(item.time_start)
 
     
     context = {

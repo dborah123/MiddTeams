@@ -2,8 +2,6 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{{ schedule_item_form.media }
-
 {% block scripts %}
 
 {% endblock scripts %}
@@ -61,7 +59,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add schedule item</button>
+                    <button type="submit" class="btn btn-primary" value="1" name="submit">Add schedule item</button>
                 </div>
                     </form>
             </div>
