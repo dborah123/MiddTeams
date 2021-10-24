@@ -120,6 +120,7 @@ class ScheduleItemForm(forms.ModelForm):
                 }
             ),
             'time_start': forms.TimeInput(
+                format='%I:%M:%S',
                 attrs={
                     'type': 'time',
                     'class': "form-control"

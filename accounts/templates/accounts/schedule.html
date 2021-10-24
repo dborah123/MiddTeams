@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block scripts %}
-
+    <script src="{% static 'accounts/index.js' %}"></script>
 {% endblock scripts %}
 
 {% block title %}
@@ -12,11 +12,13 @@
 
 {% block content %}
 
+    <!-- Schedule -->
+    <div id="schedule"></div>
+
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Create Schedule Item
     </button>
-
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -65,7 +67,29 @@
             </div>
         </div>
     </div>
+    <br>
+    {{schedule_data}}
+    <br>
+    <div id="alert-box-0"></div>
 
+    <!-- Scripts -->
+    <script type="text/javascript">
+    
+        switch ({{already_exists}}) {
+            case (1):
+                handleAlerts("danger", "Item already conflicts with this time", "0");
+                break;
+
+            case(2):
+                handleAlerts("success", "Schedule item successfully created", "0");
+                break;
+            
+            default:
+        }
+
+        //console.log({{schedule_data}})
+        //$("schedule").jqs({{schedule_data}})
+    </script>
 
 {% endblock content %}
 

@@ -1,3 +1,4 @@
+from django.db.models.query_utils import Q
 from django.shortcuts import render
 
 from accounts.models import Athlete, Coach, ScheduleItem
@@ -5,7 +6,6 @@ from accounts.utils import change_password
 from teams.models import Team
 from .forms import AthleteForm, CoachCreationForm, AthleteCreationForm, CoachForm, PasswordForm, ScheduleItemForm, UserForm
 from django.contrib.auth.models import User
-import datetime
 
 # Create your views here.
 def create_coach_view(request):
@@ -214,7 +214,7 @@ def athlete_profile_view(request):
 
     athlete_profile = Athlete.objects.get(user=request.user)
     athlete_profile_form = AthleteForm(request.POST or None, request.FILES or None, instance=athlete_profile)
-    profile_changed = False
+    profile_changed = 0
 
     # Create password changing form
     password_form = PasswordForm()
@@ -244,14 +244,14 @@ def athlete_profile_view(request):
         athlete_profile_form.save()
 
         if (athlete_profile_form.has_changed()):
-            profile_changed = True
+            profile_changed = 1
 
     #Validate and save any changes to User
     if (user_form.is_valid()):
         user_form.save()
 
         if (user_form.has_changed()):
-            profile_changed = True
+            profile_changed = 1
 
     context = {
         'profile_changed': profile_changed,
@@ -274,7 +274,24 @@ def schedule_view(request, **kwargs):
     user = User.objects.get(pk=pk)
 
     schedule_item_form = ScheduleItemForm(request.POST or None)
-    schedule_data = None
+
+    schedule_data = {
+        'mode':'read',
+        'data': None,
+    }
+    day_0, day_1, day_2, day_3, day_4, day_5, day_6 = {'day':0, 'periods':[]}, {'day':1, 'periods':[]}, {'day':2, 'periods':[]}, {'day':3, 'periods':[]}, {'day':4, 'periods':[]}, {'day':5, 'periods':[]}, {'day':6, 'periods':[]},
+    
+    options = {
+        0: day_0,
+        1: day_1,
+        2: day_2,
+        3: day_3,
+        4: day_4,
+        5: day_5,
+        6: day_6,
+    }
+
+    already_exists = 0
 
 
     # LOOK HERE FOR HOW TO SAVE
@@ -285,8 +302,17 @@ def schedule_view(request, **kwargs):
         schedule_item = schedule_item_form.save(commit=False)
         schedule_item.user=user
 
-
-        if (schedule_item.valid()):
+        # VALID IS A FUNCTION IN MODELS THAT VALIDATES IF THAT MODEL OBJECT IS VALID...CREATE THIS FOR WORKOUTS
+        if (schedule_item.not_valid() or 
+            ScheduleItem.objects.filter(
+                Q(time_start__range=[schedule_item.time_start, schedule_item.time_end], day=schedule_item.day, user=user) |
+                Q(time_end__range=[schedule_item.time_start, schedule_item.time_end], day=schedule_item.day, user=user) |
+                Q(time_start__lte=schedule_item.time_start, time_end__gte=schedule_item.time_end, day=schedule_item.day, user=user)
+            )):
+            print("here")
+            already_exists = 1
+        else:
+            already_exists = 2
             schedule_item.save()
 
         schedule_item_form = ScheduleItemForm()
@@ -299,14 +325,25 @@ def schedule_view(request, **kwargs):
     # Querying all ScheduleItems in the database
     schedule_items = ScheduleItem.objects.filter(user=user)
 
-    # for item in schedule_items:
-    #         print(item)
-    #         print(item.time_start)
+    # Append schedule items to specific day
+    for item in schedule_items:
+        options[item.day]['periods'].append([item.time_start.strftime("%H:%M"), item.time_end.strftime("%H:%M")])
 
-    
+    # A each day dict to final JSON
+    schedule_data['data'] = [
+        day_0,
+        day_1,
+        day_2,
+        day_3,
+        day_4,
+        day_5,
+        day_6,       
+    ]
+
     context = {
         'schedule_data': schedule_data,
         'schedule_item_form': schedule_item_form,
+        'already_exists': already_exists,
     }
 
     return render(request, 'accounts/schedule.html', context)

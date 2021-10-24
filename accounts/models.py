@@ -59,11 +59,17 @@ class ScheduleItem(models.Model):
         else:
             return self.name
     
-    def valid(self):
+    def not_valid(self):
         if (self.name == None 
         or self.time_start == None 
         or self.time_end == None 
         or self.day == None):
-            return False
-        else:
             return True
+        else:
+            return False
+
+    def to_twelve_hr(self):
+        '''
+        For packaging time for dyanmic schedule displayer
+        '''
+        
