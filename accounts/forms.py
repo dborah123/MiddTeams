@@ -141,4 +141,6 @@ class ScheduleItemForm(forms.ModelForm):
         self.fields['time_end'].label = ""
         self.fields['day'].label = "" 
 
+        # Random comment!
+
     
