@@ -1,12 +1,14 @@
 from django.db import models
 import accounts.models
 from django.contrib.auth.models import User
+from teams.models import Team
 
 
 
 # Create your models here.
 
 class Workout(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE,blank=True,null=True)
     name = models.CharField(max_length=120)
     description = models.TextField(default="Workout description")
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -19,6 +21,17 @@ class Workout(models.Model):
     def __str__(self):
         return self.name
 
+    def not_valid(self):
+        if (self.name == None
+        or self.description == None 
+        or self.creator == None 
+        or self.date == None
+        or self.time_start == None 
+        or self.time_end == None
+        or self.location == None):
+            return True
+        else:
+            return False
 
 EXCUSE_OPTIONS = (
     ('#1', 'Sick'),
