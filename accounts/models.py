@@ -54,4 +54,22 @@ class ScheduleItem(models.Model):
     day = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        if (self.name == None):
+            return "Name is blank"
+        else:
+            return self.name
+    
+    def not_valid(self):
+        if (self.name == None 
+        or self.time_start == None 
+        or self.time_end == None 
+        or self.day == None):
+            return True
+        else:
+            return False
+
+    def to_twelve_hr(self):
+        '''
+        For packaging time for dyanmic schedule displayer
+        '''
+        

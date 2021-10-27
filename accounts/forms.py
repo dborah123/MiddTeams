@@ -120,6 +120,7 @@ class ScheduleItemForm(forms.ModelForm):
                 }
             ),
             'time_start': forms.TimeInput(
+                format='%I:%M:%S',
                 attrs={
                     'type': 'time',
                     'class': "form-control"
@@ -139,5 +140,7 @@ class ScheduleItemForm(forms.ModelForm):
         self.fields['time_start'].label = ""
         self.fields['time_end'].label = ""
         self.fields['day'].label = "" 
+
+        # Random comment!
 
     

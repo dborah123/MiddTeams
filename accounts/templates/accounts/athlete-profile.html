@@ -3,10 +3,11 @@
 {% load crispy_forms_tags %}
 
 {% block scripts %}
-    {{athlete_profile.first_name}}'s profile
+    <script src="{% static 'accounts/index.js' %}"></script>
 {% endblock scripts %}
 
 {% block title %}
+    {{athlete_profile.first_name}}'s profile
 
 {% endblock title %}
 
@@ -40,11 +41,11 @@
 
 <script type="text/javascript">
 
-    if (profile_changed) {
+    if ({{profile_changed}}) {
         handleAlerts("success", "Successfully edited profile", "0");
     }
 
-    switch (password_key) {
+    switch ({{password_key}}) {
 
         case 0:
             handleAlerts("success", "Successfully changed password", "1");
