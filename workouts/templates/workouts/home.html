@@ -7,9 +7,67 @@
 {% endblock title %}
 
 {% block content %}
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{workout_creation_form|crispy}}
-        <button type="submit" class="btn btn-primary mb-2 mt-2">Create Workout</button>
-    </form>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Create Workout
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create Workout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupSelect01">Name</label>
+                            <input type="text" class="form-control" aria-label="Name">
+                            {{workout_form.name}}    
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupSelect01">Description</label>
+                            <input type="text" class="form-control" aria-label="Description">
+                            {{workout_form.description}}    
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupSelect01">Date</label>
+                            <input type="date" class="form-control" aria-label="Date">
+                            {{workout_form.date}}    
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupSelect01">Start Time</label>
+                            <input type="time" class="form-control" aria-label="Start Time">
+                            {{workout_form.start_time}}    
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupSelect01">End Time</label>
+                            <input type="time" class="form-control" aria-label="End Time">
+                            {{workout_form.end_time}}    
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupSelect01">Location</label>
+                            <input type="text" class="form-control" aria-label="Location">
+                            {{workout_form.location}}    
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create Workout</button>
+                </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+
+
 {% endblock content %}

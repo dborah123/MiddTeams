@@ -10,6 +10,7 @@ class Workout(models.Model):
     name = models.CharField(max_length=120)
     description = models.TextField(default="Workout description")
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
     time_start = models.DateTimeField()
     time_end = models.DateTimeField()
     location = models.CharField(max_length=120)
