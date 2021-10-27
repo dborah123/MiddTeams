@@ -86,9 +86,8 @@
             
             default:
         }
-
-        //console.log({{schedule_data}})
-        //$("schedule").jqs({{schedule_data}})
+        console.log({{schedule_data|safe}});
+        $("#schedule").jqs({{schedule_data|safe}});
     </script>
 
 {% endblock content %}

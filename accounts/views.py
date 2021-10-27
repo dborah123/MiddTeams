@@ -6,6 +6,7 @@ from accounts.utils import change_password
 from teams.models import Team
 from .forms import AthleteForm, CoachCreationForm, AthleteCreationForm, CoachForm, PasswordForm, ScheduleItemForm, UserForm
 from django.contrib.auth.models import User
+import json
 
 # Create your views here.
 def create_coach_view(request):
@@ -277,7 +278,7 @@ def schedule_view(request, **kwargs):
 
     schedule_data = {
         'mode':'read',
-        'data': None,
+        'data': [],
     }
     day_0, day_1, day_2, day_3, day_4, day_5, day_6 = {'day':0, 'periods':[]}, {'day':1, 'periods':[]}, {'day':2, 'periods':[]}, {'day':3, 'periods':[]}, {'day':4, 'periods':[]}, {'day':5, 'periods':[]}, {'day':6, 'periods':[]},
     
@@ -330,20 +331,27 @@ def schedule_view(request, **kwargs):
         options[item.day]['periods'].append([item.time_start.strftime("%H:%M"), item.time_end.strftime("%H:%M")])
 
     # A each day dict to final JSON
-    schedule_data['data'] = [
-        day_0,
-        day_1,
-        day_2,
-        day_3,
-        day_4,
-        day_5,
-        day_6,       
-    ]
+    # schedule_data['data'] = [
+    #     day_0,
+    #     day_1,
+    #     day_2,
+    #     day_3,
+    #     day_4,
+    #     day_5,
+    #     day_6,       
+    # ]
+
+    for key in options:
+        if (len(options[key]['periods']) > 0):
+            print(key)
+            schedule_data['data'].append(options[key])
 
     context = {
         'schedule_data': schedule_data,
         'schedule_item_form': schedule_item_form,
         'already_exists': already_exists,
     }
+
+    context['schedule_data'] = json.dumps(context['schedule_data'])
 
     return render(request, 'accounts/schedule.html', context)
