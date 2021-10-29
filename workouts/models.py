@@ -9,13 +9,13 @@ from teams.models import Team
 
 class Workout(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE,blank=True,null=True)
-    name = models.CharField(max_length=120)
-    description = models.TextField(default="Workout description")
+    name = models.CharField(max_length=120,blank=True,null=True)
+    description = models.TextField(blank=True,null=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateField()
-    time_start = models.DateTimeField()
-    time_end = models.DateTimeField()
-    location = models.CharField(max_length=120)
+    date = models.DateField(blank=True,null=True)
+    time_start = models.TimeField(blank=True,null=True)
+    time_end = models.TimeField(blank=True,null=True)
+    location = models.CharField(max_length=120,blank=True,null=True)
 
     # Methods
     def __str__(self):
@@ -24,7 +24,6 @@ class Workout(models.Model):
     def not_valid(self):
         if (self.name == None
         or self.description == None 
-        or self.creator == None 
         or self.date == None
         or self.time_start == None 
         or self.time_end == None
@@ -36,7 +35,6 @@ class Workout(models.Model):
 EXCUSE_OPTIONS = (
     ('#1', 'Sick'),
     ('#2', 'Injured'),
-    # Incomplete...fix later
 )
 
 class ExcuseRequest(models.Model):

@@ -26,37 +26,31 @@
                         {% csrf_token %}
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="inputGroupSelect01">Name</label>
-                            <input type="text" class="form-control" aria-label="Name">
                             {{workout_form.name}}    
                         </div>
 
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="inputGroupSelect01">Description</label>
-                            <input type="text" class="form-control" aria-label="Description">
                             {{workout_form.description}}    
                         </div>
 
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="inputGroupSelect01">Date</label>
-                            <input type="date" class="form-control" aria-label="Date">
                             {{workout_form.date}}    
                         </div>
 
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="inputGroupSelect01">Start Time</label>
-                            <input type="time" class="form-control" aria-label="Start Time">
                             {{workout_form.start_time}}    
                         </div>
 
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="inputGroupSelect01">End Time</label>
-                            <input type="time" class="form-control" aria-label="End Time">
                             {{workout_form.end_time}}    
                         </div>
 
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="inputGroupSelect01">Location</label>
-                            <input type="text" class="form-control" aria-label="Location">
                             {{workout_form.location}}    
                         </div>
                 </div>
