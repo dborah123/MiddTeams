@@ -696,9 +696,11 @@
       position += hour * this.periodInterval;
       position += mn / 60 * this.periodInterval;
 
-      if (Math.floor(position) !== position) {
-        return -1;
-      }
+      // if (Math.floor(position) !== position) {
+      //   console.log(position);
+      //   console.log(Math.floor(position));
+      //   return -1;
+      // }
 
       return position;
     },

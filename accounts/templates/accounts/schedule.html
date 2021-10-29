@@ -10,10 +10,39 @@
     schedule
 {% endblock title %}
 
+
+
 {% block content %}
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'timeGridWeek',
+          events: [
+            //{{schedule_data|safe}}
+            {
+                title: "Math",
+                startTime: "5:30PM",
+                endTime: "6:45PM",
+                daysOfWeek: [1],
+                startReoccur: '2020-9-9',
+                endReoccur: '2020-14-12',
+
+            }
+          ]
+        });
+        calendar.render();
+      });
+
+    </script>
+
+    <h2>{{user_first_name}}'s Schedule</h2>
 
     <!-- Schedule -->
     <div id="schedule"></div>
+
+    <div id="calendar"></div>
 
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -21,7 +50,7 @@
     </button>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -67,10 +96,12 @@
             </div>
         </div>
     </div>
-    <br>
-    {{schedule_data}}
-    <br>
+
     <div id="alert-box-0"></div>
+
+    <br>
+    <!-- Schedule Items Listed -->
+    
 
     <!-- Scripts -->
     <script type="text/javascript">
@@ -86,8 +117,8 @@
             
             default:
         }
-        console.log({{schedule_data|safe}});
-        $("#schedule").jqs({{schedule_data|safe}});
+        console.log({{schedule_data|safe}})
+        {% comment %} $("#schedule").jqs({{schedule_data|safe}}); {% endcomment %}
     </script>
 
 {% endblock content %}

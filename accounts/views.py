@@ -276,24 +276,9 @@ def schedule_view(request, **kwargs):
 
     schedule_item_form = ScheduleItemForm(request.POST or None)
 
-    schedule_data = {
-        'mode':'read',
-        'data': [],
-    }
-    day_0, day_1, day_2, day_3, day_4, day_5, day_6 = {'day':0, 'periods':[]}, {'day':1, 'periods':[]}, {'day':2, 'periods':[]}, {'day':3, 'periods':[]}, {'day':4, 'periods':[]}, {'day':5, 'periods':[]}, {'day':6, 'periods':[]},
-    
-    options = {
-        0: day_0,
-        1: day_1,
-        2: day_2,
-        3: day_3,
-        4: day_4,
-        5: day_5,
-        6: day_6,
-    }
+    schedule_data = []
 
     already_exists = 0
-
 
     # LOOK HERE FOR HOW TO SAVE
     if(request.method == "POST" 
@@ -301,7 +286,7 @@ def schedule_view(request, **kwargs):
         and request.POST.get("submit")):
 
         schedule_item = schedule_item_form.save(commit=False)
-        schedule_item.user=user
+        schedule_item.user = user
 
         # VALID IS A FUNCTION IN MODELS THAT VALIDATES IF THAT MODEL OBJECT IS VALID...CREATE THIS FOR WORKOUTS
         if (schedule_item.not_valid() or 
@@ -310,7 +295,6 @@ def schedule_view(request, **kwargs):
                 Q(time_end__range=[schedule_item.time_start, schedule_item.time_end], day=schedule_item.day, user=user) |
                 Q(time_start__lte=schedule_item.time_start, time_end__gte=schedule_item.time_end, day=schedule_item.day, user=user)
             )):
-            print("here")
             already_exists = 1
         else:
             already_exists = 2
@@ -328,7 +312,15 @@ def schedule_view(request, **kwargs):
 
     # Append schedule items to specific day
     for item in schedule_items:
-        options[item.day]['periods'].append([item.time_start.strftime("%H:%M"), item.time_end.strftime("%H:%M")])
+        data = {
+            'title': item.name,
+            'startTime': item.time_start.strftime("%H:%M"),
+            'endTime': item.time_end.strftime("%H:%M"),
+            'daysOfWeek': [item.day],
+            'startReoccur': '2020-9-9',
+            'endReoccur': '2020-14-12',
+        }
+        schedule_data.append(data)
 
     # A each day dict to final JSON
     # schedule_data['data'] = [
@@ -341,12 +333,8 @@ def schedule_view(request, **kwargs):
     #     day_6,       
     # ]
 
-    for key in options:
-        if (len(options[key]['periods']) > 0):
-            print(key)
-            schedule_data['data'].append(options[key])
-
     context = {
+        'user_first_name':user.first_name,
         'schedule_data': schedule_data,
         'schedule_item_form': schedule_item_form,
         'already_exists': already_exists,
