@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block excludeForLogin %}{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block scripts %}
+    <script src="{% static 'accounts/index.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/style.css' %}">
+{% endblock scripts %}
+
+
+{% block title %}
+login
+{% endblock title %}
+
+{% block content %}
+
+    <div id="alert-box-0"></div>
+
+    <div class="containter">
+        <div class="row">
+            <div class="col-6">
+                <form action="" method="POST" class="p-3 border border-2">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <button type="submit" class="btn btn-primary mt-3" value="1" name="login">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create user modal -->
+
+    <!-- Button trigger modal -->
+    <a role="button" class="btn btn-primary btn-lg mt-3" data-bs-toggle="modal" href="#createCoach">
+        Create an account
+    </a>
+
+    <!-- Coach Creation Modal -->
+    <div class="modal fade" id="createCoach" tabindex="-1"  aria-hidden="true" aria-labelledby="modalLabel">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCoach" disabled>
+                            Create Coach Account
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAthlete">
+                            Create Athlete Account
+                        </button>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {{coach_creation_form|crispy}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" value="1" name="create-coach">Create coach account</button>
+                </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Athlete Creation Modal -->
+    <div class="modal fade" id="createAthlete" tabindex="-1" aria-hidden="true" aria-labelledby="modalLabel2">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel2">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCoach">
+                            Create Coach Account
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAthlete" disabled>
+                            Create Athlete Account
+                        </button>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {{athlete_create_form|crispy}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" value="1" name="create-athlete">Create athlete account</button>
+                </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Scripts -->
+    <script type="text/javascript">
+
+        if ({{error_message}}) {
+            handleAlerts("danger", "Username or password is invalid", "0");
+        }
+
+        if ({{password_match}}) {
+            handleAlerts("warning", "Passwords don't match...try again", "0");
+        }
+
+        if ({{email_taken}}) {
+            handleAlerts("warning", "Email already taken", "0");
+        }
+
+        if ({{account_created}}) {
+            handleAlerts("success", "Account created", "0");
+        }
+
+    </script>
+
+{% endblock content %}
