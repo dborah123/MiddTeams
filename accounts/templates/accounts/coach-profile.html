@@ -31,42 +31,66 @@
 
     <hr>
 
-    <form action="" method="POST" enctype="multipart/form-data" id="change-password-btn" class="profile-form">
-        <h2>Change Password</h2>
-        {% csrf_token %}
-        {{password_form|crispy}}
-        <button type="submit" class="btn btn-primary mb-2 mt-2">Change Password</button>
-    </form>
+    <!-- Change Password Modal -->
+    <button type="button" class="btn btn-primary btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#createScheduleItem">
+        Change Password
+    </button>
 
-{% comment %} Scripts {% endcomment %}
 
-<script type="text/javascript">
+    <div class="modal fade" id="createScheduleItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST" enctype="multipart/form-data" id="change-password-btn" class="profile-form">
 
-    console.log("here");
-    console.log({{profile_changed}});
+                        {% csrf_token %}
+                        {{password_form|crispy}}
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary mb-2 mt-2">Change Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    if ({{profile_changed}}) {
-        handleAlerts("success", "Successfully edited profile", "0");
-    }
+    <!-- Url to Schedule -->
+    <a href="{% url 'accounts:schedule' user_profile.pk %}" class="btn btn-primary mt-3 btn-lg">
+        See Weekly Schedule
+    </a>
 
-    switch ({{password_key}}) {
 
-        case 0:
-            handleAlerts("success", "Successfully changed password", "1");
-            break;
-        
-        case 1:
-            handleAlerts("danger", "Old password is incorrect", "1");
-            break;
-        
-        case 2:
-            handleAlerts("danger", "Passwords don't match", "1");
-            break;
+    <!-- Scripts -->
+    <script type="text/javascript">
 
-        default:
-    }
+        if ({{profile_changed}}) {
+            handleAlerts("success", "Successfully edited profile", "0");
+        }
 
-</script>
+        switch ({{password_key}}) {
+
+            case 0:
+                handleAlerts("success", "Successfully changed password", "1");
+                break;
+            
+            case 1:
+                handleAlerts("danger", "Old password is incorrect", "1");
+                break;
+            
+            case 2:
+                handleAlerts("danger", "Passwords don't match", "1");
+                break;
+
+            default:
+        }
+
+    </script>
     
 {% endblock content %}
 

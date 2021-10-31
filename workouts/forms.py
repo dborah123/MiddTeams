@@ -53,12 +53,12 @@ class WorkoutForm(forms.ModelForm):
             ),
         }
 
-        def __init__(self, *args, **kwargs):
-            super(WorkoutForm, self).__init__(*args, **kwargs)
-            self.fields['name'].label = ""
-            self.fields['description'].label = ""
-            self.fields['date'].label = "" 
-            self.fields['time_start'].label = ""
-            self.fields['time_end'].label = ""
-            self.fields['location'].label = "" 
+    def __init__(self, *args, **kwargs):
+        super(WorkoutForm, self).__init__(*args, **kwargs)
+        self.fields['name'].label = ""
+        self.fields['description'].label = ""
+        self.fields['date'].label = "" 
+        self.fields['time_start'].label = ""
+        self.fields['time_end'].label = ""
+        self.fields['location'].label = "" 
     

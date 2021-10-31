@@ -30,15 +30,42 @@
     
     <hr>
 
-    <form action="" method="POST" enctype="multipart/form-data" id="change-password-btn" class="profile-form">
-        <h2>Change Password</h2>
-        {% csrf_token %}
-        {{password_form|crispy}}
-        <button type="submit" class="btn btn-primary mb-2 mt-2">Change Password</button>
-    </form>
+    <!-- Change Password Modal -->
+    <button type="button" class="btn btn-primary btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#createScheduleItem">
+        Change Password
+    </button>
 
-{% comment %} Scripts {% endcomment %}
 
+    <div class="modal fade" id="createScheduleItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST" enctype="multipart/form-data" id="change-password-btn" class="profile-form">
+
+                        {% csrf_token %}
+                        {{password_form|crispy}}
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary mb-2 mt-2">Change Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Url to Schedule -->
+    <a href="{% url 'accounts:schedule' user_profile.pk %}" class="btn btn-primary mt-3 btn-lg">
+        See Weekly Schedule
+    </a>
+
+
+<!-- Scripts -->
 <script type="text/javascript">
 
     if ({{profile_changed}}) {

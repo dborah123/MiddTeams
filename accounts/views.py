@@ -1,5 +1,5 @@
 from django.db.models.query_utils import Q
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from accounts.models import Athlete, Coach, ScheduleItem
 from accounts.utils import change_password
@@ -47,7 +47,6 @@ def create_coach_view(request):
             team = request.POST.get("team")
             formal_title = request.POST.get("formal_title")
             phone_number = request.POST.get("phone_number")
-            print("creating object")
             Coach.objects.create(
                                     user=user,
                                     profile_picture=profile_pic,
@@ -99,10 +98,8 @@ def create_athlete_view(request):
 
             # Check if email is already taken
             if(User.objects.filter(email=email)):
-                print("email is taken")
                 email_taken = True
             else:
-                print("email isnt taken")
                 user = User.objects.create_user(
                                                 first_name=first_name, 
                                                 last_name=last_name, 
@@ -150,7 +147,6 @@ def coach_profile_view(request):
 
     # Get user and create form
     user = request.user
-    print(user.pk)
     user_form = UserForm(request.POST or None, request.FILES or None, instance=user)
 
     # Get coach and create form
@@ -312,6 +308,7 @@ def schedule_view(request, **kwargs):
 
     # Append schedule items to specific day
     for item in schedule_items:
+        url_string = f"/accounts/profile/schedule/user={user.pk}/{item.pk}"
         data = {
             'title': item.name,
             'startTime': item.time_start.strftime("%H:%M"),
@@ -319,19 +316,9 @@ def schedule_view(request, **kwargs):
             'daysOfWeek': [item.day],
             'startReoccur': '2020-9-9',
             'endReoccur': '2020-14-12',
+            'url': url_string,
         }
         schedule_data.append(data)
-
-    # A each day dict to final JSON
-    # schedule_data['data'] = [
-    #     day_0,
-    #     day_1,
-    #     day_2,
-    #     day_3,
-    #     day_4,
-    #     day_5,
-    #     day_6,       
-    # ]
 
     context = {
         'user_first_name':user.first_name,
@@ -343,3 +330,46 @@ def schedule_view(request, **kwargs):
     context['schedule_data'] = json.dumps(context['schedule_data'])
 
     return render(request, 'accounts/schedule.html', context)
+
+
+def schedule_item_view(request, **kwargs):
+
+    # Initialize random variables
+    changed = 0
+    user_pk = kwargs.get('pk')
+    user = User.objects.get(pk=user_pk)
+
+    # Get schedule item
+    schedule_id = kwargs.get('sid')
+    schedule_item = ScheduleItem.objects.get(pk=schedule_id)
+
+    # Creating schedule form
+    schedule_item_form = ScheduleItemForm(request.POST or None,
+                                 request.FILES or None,
+                                instance=schedule_item)
+
+    # Save changes
+    if (schedule_item_form.is_valid() and 
+        ScheduleItem.objects.filter(
+                Q(time_start__range=[schedule_item.time_start, schedule_item.time_end], day=schedule_item.day, user=user) |
+                Q(time_end__range=[schedule_item.time_start, schedule_item.time_end], day=schedule_item.day, user=user) |
+                Q(time_start__lte=schedule_item.time_start, time_end__gte=schedule_item.time_end, day=schedule_item.day, user=user)
+    )):
+        schedule_item_form.save()
+
+        if(schedule_item_form.has_changed()):
+            changed = 1
+    
+    # Delete item
+    if (request.method == "POST" and request.POST.get('delete')):
+        schedule_item.delete()
+        return redirect(f'/accounts/profile/schedule/user={user_pk}')
+
+    context = {
+        'schedule_item': schedule_item,
+        'schedule_item_form': schedule_item_form,
+        'changed': changed,
+        'user_pk': user_pk,
+    }
+
+    return render(request, 'accounts/schedule-item.html', context)

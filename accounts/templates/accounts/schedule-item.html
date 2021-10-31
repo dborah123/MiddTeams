@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block scripts %}
+    <script src="{% static 'accounts/index.js' %}"></script>
+{% endblock scripts %}
+
+{% block title %}
+    {{schedule_item.name}}
+{% endblock title %}
+
+{% block content %}
+
+    <h2>Item Name: {{schedule_item.name}}</h2>
+
+    <div id="alert-box-0"></div>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+
+            <label class="input-group-text" for="inputGroupSelect01">Description</label>
+            {{schedule_item_form.name}}
+
+            </div>
+
+        <div class="input-group mb-3">
+
+            <label class="input-group-text" for="inputGroupSelect01">Start Time</label>
+            {{schedule_item_form.time_start}}
+
+        </div>
+
+        <div class="input-group mb-3">
+
+            <label class="input-group-text" for="inputGroupSelect01">End Time</label>
+            {{schedule_item_form.time_end}}
+
+        </div>
+
+        <div class="input-group mb-3">
+
+            <label class="input-group-text" for="inputGroupSelect01">Day of the Week</label>
+            {{schedule_item_form.day}}
+
+        </div>
+
+        <button type="submit" class="btn btn-primary" value="1" name="update">Update</button>
+        <button type="submit" class="btn btn-danger" value="1" name="delete">Delete item</button>
+
+        <div>
+            <a href="{% url 'accounts:schedule' user_pk %}" class="btn btn-success mt-3">
+                Return to schedule
+            </a>
+        </div>
+
+    </form>
+
+    <!-- Scripts -->
+
+    <script type="text/javascript">
+        if ({{changed}}) {
+            handleAlerts("success", "Schedule item saved", "0");
+        }
+    </script>
+{% endblock content %}
+

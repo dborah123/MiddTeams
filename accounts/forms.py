@@ -1,7 +1,5 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.db.models import fields
-from django.forms.widgets import Select
 from accounts.models import Athlete, Coach, ScheduleItem
 from teams.models import Team
 
@@ -82,6 +80,7 @@ class AthleteForm(forms.ModelForm):
         super(AthleteForm, self).__init__(*args, **kwargs)
         self.fields['team'].disabled = True
 
+
 class UserForm(forms.ModelForm):
 
     class Meta:
@@ -139,7 +138,5 @@ class ScheduleItemForm(forms.ModelForm):
         self.fields['time_start'].label = ""
         self.fields['time_end'].label = ""
         self.fields['day'].label = "" 
-
-        # Random comment!
 
     
