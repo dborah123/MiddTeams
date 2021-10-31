@@ -1,8 +1,8 @@
-## [insert project title here]
-### Middlebury College, Computer Science CSCI 701 (Fall 2020)
+## [Middteams]
+### Middlebury College, Computer Science CSCI 701 (Fall 2021)
 
 ### about
-TODO: a few sentences describing your project
+Middteams is an application meant to aid communication and scheduling for athletics at Middlebury. Coaches and athletes have the ability to schedule workouts and practices and RSVP for them, increasing transparency in the scheduling process. With this app, we hope that coaches will be able to be better prepared for practice and that athletes will use this app to help balance their schedules between academics and athletics.
 
 view our website [here](https://dborah123.github.io/MiddTeams/)
 
