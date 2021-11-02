@@ -7,7 +7,7 @@ from .views import (
     schedule_item_view,
 )
 
-app_name='acounts'
+app_name='accounts'
 
 urlpatterns = [
     path('create-coach/', create_coach_view, name='create_coach'),

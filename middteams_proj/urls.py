@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('workouts.urls', namespace='workouts')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('teams/', include('teams.urls', namespace='teams')),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
 

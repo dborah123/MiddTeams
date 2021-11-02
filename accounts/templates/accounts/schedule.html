@@ -22,9 +22,19 @@
     <div id="calendar"></div>
 
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createScheduleItem">
-        Create Schedule Item
-    </button>
+    {% if owner %}
+        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createScheduleItem">
+            Create Schedule Item
+        </button>
+
+    {% else %}
+        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createScheduleItem" disabled>
+            Create Schedule Item
+        </button>
+    {% endif %}
+        
+
+
 
     <!-- Modal -->
     <div class="modal fade" id="createScheduleItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -83,6 +93,10 @@
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
+                allDaySlot: false,
+                nowIndicator: true,
+                slotMinTime: "07:00:00",
+                height:600,
                 events: 
                     {{schedule_data|safe}},
                 eventTimeFormat: { // like '14:30:00'

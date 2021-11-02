@@ -267,8 +267,13 @@ def schedule_view(request, **kwargs):
     """
 
     # Get pk and user
-    pk = kwargs.get('pk')
-    user = User.objects.get(pk=pk)
+    user_pk = kwargs.get('pk')
+    user = User.objects.get(pk=user_pk)
+
+    owner = True
+
+    if (int(user_pk) != user.pk):
+        owner = False
 
     schedule_item_form = ScheduleItemForm(request.POST or None)
 
@@ -308,7 +313,7 @@ def schedule_view(request, **kwargs):
 
     # Append schedule items to specific day
     for item in schedule_items:
-        url_string = f"/accounts/profile/schedule/user={user.pk}/{item.pk}"
+        url_string = f"/accounts/profile/schedule/user={user_pk}/{item.pk}"
         data = {
             'title': item.name,
             'startTime': item.time_start.strftime("%H:%M"),
@@ -325,6 +330,7 @@ def schedule_view(request, **kwargs):
         'schedule_data': schedule_data,
         'schedule_item_form': schedule_item_form,
         'already_exists': already_exists,
+        'owner': owner,
     }
 
     context['schedule_data'] = json.dumps(context['schedule_data'])
@@ -336,8 +342,13 @@ def schedule_item_view(request, **kwargs):
 
     # Initialize random variables
     changed = 0
+    user = request.user
     user_pk = kwargs.get('pk')
-    user = User.objects.get(pk=user_pk)
+
+    # Verify that user is ower of schedule item
+    if (user.pk != int(user_pk)):
+        print(type(user.pk), type(user_pk))
+        return redirect(f'/accounts/profile/schedule/user={user_pk}') 
 
     # Get schedule item
     schedule_id = kwargs.get('sid')
@@ -369,7 +380,7 @@ def schedule_item_view(request, **kwargs):
         'schedule_item': schedule_item,
         'schedule_item_form': schedule_item_form,
         'changed': changed,
-        'user_pk': user_pk,
+        'user_pk': user.pk,
     }
 
     return render(request, 'accounts/schedule-item.html', context)

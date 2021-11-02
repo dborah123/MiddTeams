@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {{team}} roster
+{% endblock title %}
+
+{% block content %}
+
+    <h2 class="alert alert-success">{{team}} Roster</h2>
+    <hr>
+
+    <!-- List Coaches -->
+    <div class="mt-4">
+        <h4 class="alert alert-info">Coaches</h4>
+        {% for coach in coaches %}
+
+            <strong>Name: </strong>{{coach.first_name}} {{coach.last_name}}
+            <strong>Title: </strong>{{coach.formal_title}}
+            <strong>Email: </strong>{{coach.email}}        
+
+            <a href="{% url 'accounts:schedule' coach.pk %}" class="btn btn-primary">
+                Schedule
+            </a>
+        {% endfor %}
+    </div>
+
+    <hr>
+
+    <div class="mt-4">
+        <!-- List athletes -->
+        <h4 class="alert alert-info">Athletes</h4>
+        {% for athlete in athlete_roster %}
+            
+            {% if captain %}
+                <strong>Captain</strong> | 
+            {% endif %}
+                
+            <strong>Name:</strong> {{athlete.first_name}} {{athlete.last_name}} | 
+            <strong>Position:</strong> {{athlete.position}} | 
+            <strong>Email:</strong> {{athlete.email}}
+
+            <a href="{% url 'accounts:schedule' athlete.pk %}" class="btn btn-primary">
+                Schedule
+            </a>
+        {% endfor %}
+    </div>
+
+{% endblock content %}
