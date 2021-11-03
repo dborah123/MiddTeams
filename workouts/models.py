@@ -4,9 +4,6 @@ from django.contrib.auth.models import User
 from teams.models import Team
 
 
-
-# Create your models here.
-
 class Workout(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE,blank=True,null=True)
     name = models.CharField(max_length=120,blank=True,null=True)
