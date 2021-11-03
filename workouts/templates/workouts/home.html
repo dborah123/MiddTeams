@@ -63,5 +63,29 @@
         </div>
     </div>
 
+    <!-- Displaying Workouts -->
+    <div class="mt-3">
+        {% for workout in workouts %}
+            <div class="card">
+                <div class="card-header {% if workout.rsvp %}success{% else %}primary{% endif %}">
+                    {{workout.name}}
+                    <div class="d-flex">
+                        Date: {{workout.date}}
+                    </div>
+                </div>
+                <div class="card-body">
+                    Creator: {{workout.creator_first}} {{workout.creator_last}}
+                    <br>
+                    From {{workout.time_start}} to {{workout.time_end}}
+                    <br>
+                    Location: {{workout.location}}
+
+                    <p class="card-text">{{workout.description}}</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
 
 {% endblock content %}

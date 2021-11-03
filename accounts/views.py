@@ -134,7 +134,7 @@ def create_athlete_view(request):
 def profile_view(request):
 
     # Query if the user is a coach
-    is_coach_user = Coach.objects.get(user=request.user)
+    is_coach_user = Coach.objects.filter(user=request.user)
 
     # Redirect user depending on type of user
     if(is_coach_user):
@@ -204,7 +204,6 @@ def coach_profile_view(request):
 
 
 def athlete_profile_view(request):
-
     # Get user and create form
     user = request.user
     user_form = UserForm(request.POST or None, request.FILES or None, instance=user)
@@ -235,22 +234,24 @@ def athlete_profile_view(request):
         if (password_key == 0):
             user.password = new_password
             user.save()
+    else:
+        #Validate and save any changes to Athlete
+        if (athlete_profile_form.is_valid()):
+            athlete_profile_form.save()
 
-    #Validate and save any changes to Athlete
-    if (athlete_profile_form.is_valid()):
-        athlete_profile_form.save()
+            if (athlete_profile_form.has_changed()):
+                profile_changed = 1
 
-        if (athlete_profile_form.has_changed()):
-            profile_changed = 1
+        #Validate and save any changes to User
+        if (user_form.is_valid()):
+            user_form.save()
 
-    #Validate and save any changes to User
-    if (user_form.is_valid()):
-        user_form.save()
-
-        if (user_form.has_changed()):
-            profile_changed = 1
+            if (user_form.has_changed()):
+                profile_changed = 1
 
     context = {
+        'user_profile':user,
+        'user_form':user_form,
         'profile_changed': profile_changed,
         'athlete_profile': athlete_profile,
         'athlete_profile_form': athlete_profile_form,
@@ -271,7 +272,7 @@ def schedule_view(request, **kwargs):
     user = User.objects.get(pk=user_pk)
 
     owner = True
-
+    
     if (int(user_pk) != user.pk):
         owner = False
 
@@ -282,7 +283,7 @@ def schedule_view(request, **kwargs):
     already_exists = 0
 
     # LOOK HERE FOR HOW TO SAVE
-    if(request.method == "POST" 
+    if (request.method == "POST" 
         and schedule_item_form.is_valid() 
         and request.POST.get("submit")):
 
