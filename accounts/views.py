@@ -4,9 +4,12 @@ from django.shortcuts import redirect, render
 from accounts.models import Athlete, Coach, ScheduleItem
 from accounts.utils import change_password
 from teams.models import Team
+from workouts.models import Workout
 from .forms import AthleteForm, CoachCreationForm, AthleteCreationForm, CoachForm, PasswordForm, ScheduleItemForm, UserForm
 from django.contrib.auth.models import User
 import json
+
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def create_coach_view(request):
@@ -131,6 +134,7 @@ def create_athlete_view(request):
     return render(request, 'accounts/create-athlete.html', context)
 
 
+@login_required(login_url='/login/')
 def profile_view(request):
 
     # Query if the user is a coach
@@ -143,6 +147,7 @@ def profile_view(request):
         return athlete_profile_view(request)
 
 
+@login_required(login_url='/login/')
 def coach_profile_view(request):
 
     # Get user and create form
@@ -203,6 +208,7 @@ def coach_profile_view(request):
     return render(request, "accounts/coach-profile.html", context)
 
 
+@login_required(login_url='/login/')
 def athlete_profile_view(request):
     # Get user and create form
     user = request.user
@@ -262,6 +268,7 @@ def athlete_profile_view(request):
     return render(request, "accounts/athlete-profile.html", context)
 
 
+@login_required(login_url='/login/')
 def schedule_view(request, **kwargs):
     """
     Collects schedule of Athlete designated by pk and passes it to js, displaying schedule
@@ -271,18 +278,16 @@ def schedule_view(request, **kwargs):
     user_pk = kwargs.get('pk')
     user = User.objects.get(pk=user_pk)
 
-    owner = True
-    
-    if (int(user_pk) != user.pk):
-        owner = False
+    if (request.user.pk != user.pk):
+        not_owner = True
+    else:
+        not_owner = False
 
+    # Initialize more variables
     schedule_item_form = ScheduleItemForm(request.POST or None)
-
     schedule_data = []
-
     already_exists = 0
 
-    # LOOK HERE FOR HOW TO SAVE
     if (request.method == "POST" 
         and schedule_item_form.is_valid() 
         and request.POST.get("submit")):
@@ -326,12 +331,38 @@ def schedule_view(request, **kwargs):
         }
         schedule_data.append(data)
 
+    # Packaging data about workouts
+    if (Coach.objects.filter(user=user)):
+        coach = Coach.objects.get(user=user)
+        for item in Workout.objects.filter(team=coach.team):
+            url_string = f"/workout={item.pk}"
+            data = {
+                'title': item.name,
+                'start': str(item.date) + "T" + item.time_end.strftime("%H:%M"),
+                'end': str(item.date) + "T" + item.time_end.strftime("%H:%M"),
+                'url': url_string,
+            }
+            schedule_data.append(data)
+
+    else:
+        athlete = Athlete.objects.get(user=user)
+        for item in athlete.workouts_rsvped_for.all():
+            url_string = f"/workout={item.pk}"
+            data = {
+                'title': item.name,
+                'start': str(item.date) + "T" + item.time_end.strftime("%H:%M"),
+                'end': str(item.date) + "T" + item.time_end.strftime("%H:%M"),
+                'url': url_string,
+            }
+            schedule_data.append(data)
+
+
     context = {
         'user_first_name':user.first_name,
         'schedule_data': schedule_data,
         'schedule_item_form': schedule_item_form,
         'already_exists': already_exists,
-        'owner': owner,
+        'not_owner': not_owner,
     }
 
     context['schedule_data'] = json.dumps(context['schedule_data'])
@@ -339,6 +370,7 @@ def schedule_view(request, **kwargs):
     return render(request, 'accounts/schedule.html', context)
 
 
+@login_required(login_url='/login/')
 def schedule_item_view(request, **kwargs):
 
     # Initialize random variables

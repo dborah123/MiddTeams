@@ -49,6 +49,7 @@ def login_view(request):
                     login(request, user)
                     
                     if(request.GET.get('next')):
+                        print("Here")
                         return redirect(request.GET.get('next'))
                     else:
                         # Brings user to homepage

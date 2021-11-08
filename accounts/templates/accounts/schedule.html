@@ -22,17 +22,9 @@
     <div id="calendar"></div>
 
     <!-- Button trigger modal -->
-    {% if owner %}
-        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createScheduleItem">
-            Create Schedule Item
-        </button>
-
-    {% else %}
-        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createScheduleItem" disabled>
-            Create Schedule Item
-        </button>
-    {% endif %}
-        
+    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createScheduleItem" {% if not_owner %}disabled{% endif %}>
+        Create Schedule Item
+    </button>
 
 
 
