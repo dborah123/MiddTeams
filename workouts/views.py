@@ -4,8 +4,6 @@ from .forms import WorkoutCreationForm, WorkoutForm
 from accounts.models import Coach, Athlete
 from .models import Workout
 from datetime import date, timedelta
-from django.contrib.auth.models import User
-
 
 from django.contrib.auth.decorators import login_required
 
@@ -59,7 +57,6 @@ def home_view(request):
         return athlete_workouts_view(request)
 
 
-# to be worked on later
 @login_required(login_url='/login/')
 def coach_workouts_view(request):
     
@@ -117,7 +114,6 @@ def coach_workouts_view(request):
     return render(request, 'workouts/home.html', context)
 
 
-# view for athletes
 @login_required(login_url='/login/')
 def athlete_workouts_view(request):
 
