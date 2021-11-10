@@ -40,7 +40,7 @@ class Athlete(models.Model):
     captain = models.BooleanField(default=False)
     position = models.CharField(max_length=200)
 
-    workouts_rsvped_for = models.ManyToManyField(Workout)
+    workouts_rsvped_for = models.ManyToManyField(Workout, blank=True)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"

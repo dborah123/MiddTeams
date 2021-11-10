@@ -15,15 +15,18 @@
     <div class="mt-4">
         <h4 class="alert alert-info">Coaches</h4>
         {% for coach in coaches %}
+            <div class="mt-1">
+                <strong>Name: </strong>{{coach.first_name}} {{coach.last_name}}
+                <strong>Title: </strong>{{coach.formal_title}}
+                <strong>Email: </strong>{{coach.email}}        
 
-            <strong>Name: </strong>{{coach.first_name}} {{coach.last_name}}
-            <strong>Title: </strong>{{coach.formal_title}}
-            <strong>Email: </strong>{{coach.email}}        
-
-            <a href="{% url 'accounts:schedule' coach.pk %}" class="btn btn-primary">
-                Schedule
-            </a>
+                <a href="{% url 'accounts:schedule' coach.pk %}" class="btn btn-primary">
+                    Schedule
+                </a>
+                <br>
+            </div>
         {% endfor %}
+
     </div>
 
     <hr>
@@ -36,15 +39,18 @@
             {% if captain %}
                 <strong>Captain</strong> | 
             {% endif %}
-                
-            <strong>Name:</strong> {{athlete.first_name}} {{athlete.last_name}} | 
-            <strong>Position:</strong> {{athlete.position}} | 
-            <strong>Email:</strong> {{athlete.email}}
+                <div class="mt-1">
+                    <strong>Name:</strong> {{athlete.first_name}} {{athlete.last_name}} | 
+                    <strong>Position:</strong> {{athlete.position}} | 
+                    <strong>Email:</strong> {{athlete.email}}
 
-            <a href="{% url 'accounts:schedule' athlete.pk %}" class="btn btn-primary">
-                Schedule
-            </a>
+                    <a href="{% url 'accounts:schedule' athlete.pk %}" class="btn btn-primary">
+                        Schedule
+                    </a>
+                    <br>
+                </div>
         {% endfor %}
+
     </div>
 
 {% endblock content %}

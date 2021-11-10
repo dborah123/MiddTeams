@@ -1,0 +1,43 @@
+{% load static %}
+{% url 'workouts:home' as path_to_workouts %}
+{% url 'accounts:schedule' request.user.pk as path_to_schedule %}
+{% url 'teams:roster' as path_to_roster %}
+{% url 'accounts:profile' as path_to_profile %}
+{% url 'logout' as path_to_logout %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{path_to_workouts}}">MiddTeams</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == path_to_workouts %}active{% endif %}" aria-current="page" href="{{path_to_workouts}}">
+                        Workouts
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == path_to_schedule %}active{% endif %}" href="{{path_to_schedule}}">
+                        Schedule
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == path_to_roster %}active{% endif %}" href="{{path_to_roster}}">
+                        Team Roster
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == path_to_profile %}active{% endif %}" href="{{path_to_profile}}">
+                        Profile
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex">
+                <a href="{{path_to_logout}}" class="btn btn-outline-primary">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
