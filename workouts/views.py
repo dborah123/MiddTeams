@@ -76,15 +76,7 @@ def coach_workouts_view(request):
         workout.creator = user
         workout.team = team
 
-        if (workout.not_valid() or 
-            Workout.objects.filter(
-                Q(time_start__range=[workout.time_start, workout.time_end], date=workout.date, team=team) |
-                Q(time_end__range=[workout.time_start, workout.time_end], date=workout.date, team=team) |
-                Q(time_start__lte=workout.time_start, time_end__gte=workout.time_end, date=workout.date, team=team)
-            )):
-            already_exists = 1
-        else:
-            already_exists = 2
+        if (not workout.not_valid()):
             workout.save()
 
         workout_form = WorkoutCreationForm()
@@ -129,19 +121,19 @@ def athlete_workouts_view(request):
         'bool': 0,
         'name': None,
         'time_start': None,
+        'pk': None
     }
 
     # Creating a new workout
     if (request.method == "POST" 
         and workout_form.is_valid() 
         and request.POST.get("submit")):
-
         workout = workout_form.save(commit=False)
         workout.creator = user
         workout.team = team
 
-
-        workout.save()
+        if (not workout.not_valid()):
+            workout.save()
 
         workout_form = WorkoutCreationForm()
     
@@ -163,6 +155,7 @@ def athlete_workouts_view(request):
                 rsvp_conflict['bool'] = 1
                 rsvp_conflict['name'] = str(workout_rsvp_qset[0].name)
                 rsvp_conflict['time_start'] =str( workout_rsvp_qset[0].time_start)
+                rsvp_conflict['pk'] = workout_rsvp_qset[0].pk
             else:
                 user_athlete.workouts_rsvped_for.add(workout_to_rsvp)
 
@@ -207,7 +200,7 @@ def athlete_workouts_view(request):
     return render(request, 'workouts/home.html', context)
 
 
-@login_required
+@login_required(login_url='/login/')
 def workout_detail_view(request, **kwargs):
     '''
     Details of workout
@@ -219,7 +212,9 @@ def workout_detail_view(request, **kwargs):
         'bool': 0,
         'name': None,
         'time_start': None,
+        'pk': None,
     }
+    rsvpd_athletes = []
 
     # Check if user is coach or athlete
     if (Coach.objects.filter(user=request.user)):
@@ -256,9 +251,9 @@ def workout_detail_view(request, **kwargs):
     if (request.method == "POST" 
         and not coach_bool):
         # RSVP user to specified workout
-        if (request.POST.get('rsvp-btn', None)):
-            user_athlete = Athlete.objects.get(user=request.user)
+        user_athlete = Athlete.objects.get(user=request.user)
 
+        if (request.POST.get('rsvp-btn', None)):
             # Checking if user has already rsvped for a workout
             workout_rsvp_qset = user_athlete.workouts_rsvped_for.filter(
                                 Q(date=workout.date, time_start__range=[workout.time_start, workout.time_end]) |
@@ -268,9 +263,10 @@ def workout_detail_view(request, **kwargs):
 
             
             if (workout_rsvp_qset and not workout_rsvp_qset[0] == workout):
-                    rsvp_conflict['bool'] = 1
-                    rsvp_conflict['name'] = str(workout_rsvp_qset[0].name)
-                    rsvp_conflict['time_start'] =str( workout_rsvp_qset[0].time_start)
+                rsvp_conflict['bool'] = 1
+                rsvp_conflict['name'] = str(workout_rsvp_qset[0].name)
+                rsvp_conflict['time_start'] = str( workout_rsvp_qset[0].time_start)
+                rsvp_conflict['pk'] = workout_rsvp_qset[0].pk
             else:
                 user_athlete.workouts_rsvped_for.add(workout)
 
@@ -278,11 +274,13 @@ def workout_detail_view(request, **kwargs):
         if (request.POST.get('cancel-btn', None)):
                 user_athlete.workouts_rsvped_for.remove(workout)
 
-    print(Athlete.objects.filter(workouts_rsvped_for=workout))
-
     # Packaging athletes RSVP'd for this workout
     for item in Athlete.objects.filter(workouts_rsvped_for=workout):
-        print(item)
+        d = {
+            'first_name': item.user.first_name,
+            'last_name': item.user.last_name,
+        }
+        rsvpd_athletes.append(d)
 
     # Checks if user has already rsvpd
     if (not coach_bool):
@@ -302,7 +300,54 @@ def workout_detail_view(request, **kwargs):
         'not_creator': not_creator,
         'changed': changed,
         'rsvp_conflict': rsvp_conflict,
-        'already_rsvped': already_rsvped
+        'already_rsvped': already_rsvped,
+
+        'rsvpd_athletes': rsvpd_athletes,
     }
 
     return render(request, 'workouts/workout-details.html', context)
+
+
+@login_required(login_url='/login/')
+def all_workouts(request):
+    '''
+    Page with entire history of workouts
+    '''
+    user = request.user
+
+    todays_workouts = []
+    past_workouts = []
+    future_workouts = []
+
+    if (Coach.objects.filter(user=user)):
+        team = Coach.objects.get(user=user).team
+    else:
+        team = Athlete.objects.get(user=user).team
+
+    for workout in Workout.objects.filter(team=team).order_by("date"):
+        d = {
+            "name":workout.name,
+            "workout_description":workout.description,
+            "creator_first":workout.creator.first_name,
+            "creator_last":workout.creator.last_name,
+            "workout_date":str(workout.date),
+            "time_start":str(workout.time_start),
+            "time_end":str(workout.time_end),
+            "location":workout.location,
+            "pk":workout.pk,
+        }
+        if (workout.date != None):
+            if (workout.date < date.today()):
+                past_workouts.append(d)
+            elif (workout.date == date.today()):
+                todays_workouts.append(d)
+            else:
+                future_workouts.append(d)
+
+    context = {
+        'past_workouts': past_workouts,
+        'current_workouts': todays_workouts,
+        'future_workouts': future_workouts,
+    }
+
+    return render(request, 'workouts/all-workouts.html', context)

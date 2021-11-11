@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    workout details
+{% endblock title %}
+
+{% block content %}
+    <h2>All Workouts</h2>
+    <hr>
+
+    <!-- Today's workouts -->
+    <h4>Today's Workouts</h4>
+
+    {% if not current_workouts %}
+        <div class="alert alert-secondary">
+            Looks like there's nothing here
+        </div>
+    {% endif %}
+
+    <div class="mt-2">
+        {% for item in current_workouts %}
+            <div class="card mt-3">
+                <div class="card-header text-white bg-secondary">
+                    <h3>Workout Name: {{item.name}}</h3>
+                    <a class="stretched-link" href="{% url 'workouts:workout-detail' item.pk %}"></a>
+
+                    <div class="d-flex">
+                        Date: {{item.workout_date}}
+                    </div>
+                </div>
+                <div class="card-body">
+                    Creator: {{item.creator_first}} {{item.creator_last}}
+                    <br>
+                    From {{item.time_start}} to {{item.time_end}}
+                    <br>
+                    Location: {{item.location}}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <hr>
+
+    <!-- Future Workouts -->
+    <h4>Upcoming Workouts</h4>
+
+    {% if not future_workouts %}
+        <div class="alert alert-secondary">
+            Looks like there's nothing here
+        </div>
+    {% endif %}
+
+    <div class="mt-2">
+        {% for item in future_workouts %}
+            <div class="card mt-3">
+                <div class="card-header text-white bg-secondary">
+                    <h3>Workout Name: {{item.name}}</h3>
+                    <a class="stretched-link" href="{% url 'workouts:workout-detail' item.pk %}"></a>
+
+                    <div class="d-flex">
+                        Date: {{item.workout_date}}
+                    </div>
+                </div>
+                <div class="card-body">
+                    Creator: {{item.creator_first}} {{item.creator_last}}
+                    <br>
+                    From {{item.time_start}} to {{item.time_end}}
+                    <br>
+                    Location: {{item.location}}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <hr>
+
+    <!-- Past Workouts -->
+    <h4>Past Workouts</h4>
+
+    {% if not past_workouts %}
+        <div class="alert alert-secondary">
+            Looks like there's nothing here
+        </div>
+    {% endif %}
+
+    <div class="mt-2">
+        {% for item in past_workouts %}
+            <div class="card mt-3">
+                <div class="card-header text-white bg-secondary">
+                    <h3>Workout Name: {{item.name}}</h3>
+                    <a class="stretched-link" href="{% url 'workouts:workout-detail' item.pk %}"></a>
+
+                    <div class="d-flex">
+                        Date: {{item.workout_date}}
+                    </div>
+                </div>
+                <div class="card-body">
+                    Creator: {{item.creator_first}} {{item.creator_last}}
+                    <br>
+                    From {{item.time_start}} to {{item.time_end}}
+                    <br>
+                    Location: {{item.location}}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+{% endblock content %}

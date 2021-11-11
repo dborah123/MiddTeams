@@ -6,81 +6,111 @@
     <script src="{% static 'workouts/index.js' %}"></script>
 {% endblock scripts %}
 
-
-
 {% block title %}
     workout details
 {% endblock title %}
 
 {% block content %}
 
-    <form action="" method="POST">
-        {% csrf_token %}
+    <div class="alert-box-0"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form action="" method="POST">
+                    {% csrf_token %}
 
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01">Name</label>
-            {{workout_form.name}}    
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Name</label>
+                        {{workout_form.name}}    
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Location</label>
+                        {{workout_form.location}}    
+                    </div>
+
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Description</label>
+                        {{workout_form.description}}    
+                    </div>
+
+                    <div class="input-group mb-3 input-box-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Date</label>
+                        {{workout_form.date}}    
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Start Time</label>
+                        {{workout_form.time_start}}    
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">End Time</label>
+                        {{workout_form.time_end}}    
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Team</span>
+                        <input type="text" class="form-control" placeholder="{{workout_team}}" disabled>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Creator</span>
+                        <input type="text" class="form-control" placeholder="{{workout_creator}}" disabled>
+                    </div>
+
+                    <button class="btn btn-outline-primary mt-1" name="update" input="1" {% if not_creator %}disabled{% endif %}>Update workout</button>
+                    <button class="btn btn-outline-danger mt-1" name="delete" input="1" {% if not_creator %}disabled{% endif %}>Delete</button>
+
+                    {% if coach_bool %}
+                        <button class="btn btn-outline-success mt-1" name="rsvp-btn" value="1" disabled>
+                            Cancel RSVP
+                        </button>
+                    {% elif already_rsvped %}
+                        <button class="btn btn-outline-danger mt-1" name="cancel-btn" value="1">
+                            Cancel RSVP
+                        </button>
+                    {% else %}
+                        <button class="btn btn-outline-success mt-1" name="rsvp-btn" value="1">
+                            RSVP
+                        </button>
+                    {% endif %}
+
+                </form>
+            </div>
+
+            <div class="col">
+                <!-- Display Athletes RSVP'd -->
+                <h4 class="mt-2">Who's RSVP'd</h4>
+
+                <div>
+                    
+                    {% if not rsvpd_athletes %}
+                        <div class="alert alert-secondary">
+                            Looks like no one's RSVP'd yet
+                        </div>
+                    {% endif %}
+                        
+                    {% for item in rsvpd_athletes %}
+                        <div>
+                            {{item.first_name}} {{item.last_name}}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01">Location</label>
-            {{workout_form.location}}    
-        </div>
-
-
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01">Description</label>
-            {{workout_form.description}}    
-        </div>
-
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01">Date</label>
-            {{workout_form.date}}    
-        </div>
-
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01">Start Time</label>
-            {{workout_form.time_start}}    
-        </div>
-
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01">End Time</label>
-            {{workout_form.time_end}}    
-        </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Team</span>
-            <input type="text" class="form-control" placeholder="{{workout_team}}" disabled>
-        </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Creator</span>
-            <input type="text" class="form-control" placeholder="{{workout_creator}}" disabled>
-        </div>
-
-        <button class="btn btn-outline-primary mt-1" name="update" input="1" {% if not_creator %}disabled{% endif %}>Update workout</button>
-        <button class="btn btn-outline-danger mt-1" name="delete" input="1" {% if not_creator %}disabled{% endif %}>Delete</button>
-
-        {% if coach_bool %}
-            <button class="btn btn-outline-danger mt-1" name="rsvp-btn" value="1">
-                Cancel RSVP
-            </button>
-        {% elif already_rsvped %}
-            <button class="btn btn-outline-danger mt-1" name="rsvp-btn" value="1">
-                Cancel RSVP
-            </button>
-        {% else %}
-            <button class="btn btn-outline-success mt-1" name="rsvp-btn" value="1">
-                RSVP
-            </button>
-        {% endif %}
-
-    </form>
+    </div>
 
     <!-- Scripts -->
     <script type="text/javascript">
         if ({{rsvp_conflict.bool}}) {
-            handleAlertsRSVPConflict();
+            handleAlertsRSVPConflict("0",
+                                     "{{rsvp_conflict.name}}", 
+                                     "{{rsvp_conflict.time_start}}", 
+                                     "{% url 'workouts:workout-detail' rsvp_conflict.pk %}"
+                                     );
         }
     </script>
 
