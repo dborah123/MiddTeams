@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block scripts %}
+    <script src="{% static 'teams/index.js' %}"></script>
+{% endblock scripts %}
+
+{% block title %}
+    Scheduling Tool
+{% endblock title %}
+
+{% block content %}
+    <h2>Scheduling Tool</h2>
+    <hr>
+    <form action="" method="POST">
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div id="form-0">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            Potential Meeting #1
+                        </div>
+                    </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Start Time</label>
+                            {{time_form0.time_start0}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Time End</label>
+                            {{time_form0.time_end0}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Time End</label>
+                            {{time_form0.day0}}
+                        </div>
+                        <button class="btn btn-primary mb-3" name="btn-0" value="1">Submit</button>
+                    </form>
+                    <hr>
+                    <!-- Printing Data -->
+                    <div>
+                        {% if data.0.active %}
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Statistics for Potential Meeting #1</h5>
+                                </div>
+                                <div class="card-body">
+                                    <strong>Number of athletes availible:</strong> {{data.0.count}}
+                                    <br>
+                                    <strong>% of Team:</strong> {{data.0.percent_of_team}}% 
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div id="btn-1">
+                    <button class="btn btn-outline-primary" onclick="openForm(1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                        Add another
+                    </button>
+                </div>
+                <div id="form-1">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            Potential Meeting #2
+                            <button type="button" class="btn-close" id="btn-1-remove" onclick="closeForm(1)" aria-label="Close"></button>
+                        </div>
+                    </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Start Time</label>
+                            {{time_form1.time_start1}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Time End</label>
+                            {{time_form1.time_end1}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Time End</label>
+                            {{time_form1.day1}}
+                        </div>
+                        <button class="btn btn-primary mb-3" name="btn-1" value="1">Submit</button>
+                    <hr>
+                    <!-- Printing Data -->
+                    <div>
+                        {% if data.1.active %}
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Statistics for Potential Meeting #2</h5>
+                                </div>
+                                <div class="card-body">
+                                    <strong>Number of athletes availible:</strong> {{data.1.count}}
+                                    <br>
+                                    <strong>% of Team:</strong> {{data.1.percent_of_team}}%
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div id="btn-2">
+                    <button class="btn btn-outline-primary" onclick="openForm(2)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                        Add another
+                    </button>
+                </div>
+                <div id="form-2">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            Potential Meeting #3
+                            <button type="button" class="btn-close" onclick="closeForm(2)" id="btn-2-remove"></button>
+                        </div>
+                    </div>
+
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Start Time</label>
+                            {{time_form2.time_start2}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Time End</label>
+                            {{time_form2.time_end2}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Time End</label>
+                            {{time_form2.day2}}
+                        </div>
+                        <button class="btn btn-primary mb-3" name="btn-2" value="1">Submit</button>
+                    <hr>
+                    <!-- Printing Data -->
+                    <div>
+                        {% if data.2.active %}
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Statistics for Potential Meeting #3</h5>
+                                </div>
+                                <div class="card-body">
+                                    <strong>Number of athletes availible:</strong> {{data.2.count}}
+                                    <br>
+                                    <strong>% of Team:</strong> {{data.2.percent_of_team}}%
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+{% endblock content %}
+

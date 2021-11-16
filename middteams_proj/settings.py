@@ -136,6 +136,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
     BASE_DIR / 'accounts' / 'static',
+    BASE_DIR / 'workouts' / 'static',
+    BASE_DIR / 'teams' / 'static',
 ]
 
 MEDIA_URL = '/media/'
