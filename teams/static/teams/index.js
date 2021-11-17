@@ -19,8 +19,6 @@ $(document).ready(function() {
     }
 });
 
-
-
 function openForm(num) {
     $("#btn-" + num).hide();
     localStorage.setItem('show-' + num, 'true'); //store state in localStorage
@@ -32,14 +30,3 @@ function closeForm(num) {
     localStorage.setItem('show-' + num, 'false'); //store state in localStorage
     $("#btn-" + num).show();
 }
-
-
-
-
-// $('#btn-1').on('click', function() {
-//     $('#btn-2-show').on('click', function() {
-//         console.log("saving pls");
-//         localStorage.setItem('show',true);
-//         window.location.reload(false); 
-//     })
-// // })

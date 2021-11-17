@@ -1,10 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.contrib.auth.models import User
+
+from datetime import datetime
 
 from accounts.models import Athlete, Coach, ScheduleItem
 from teams.forms import ScheduleToolForm0, ScheduleToolForm1, ScheduleToolForm2
-from teams.utils import count_availible
+from teams.utils import is_availible
 
 # Create your views here.
 @login_required(login_url='/login/')
@@ -88,14 +89,16 @@ def schedule_tool(request):
             data[0]['active'] = True
             for athlete in team_qset:
                 for item in ScheduleItem.objects.filter(user=athlete.user):
-                    if (count_availible(request.POST.get('time_start0'), 
-                                        request.POST.get('time_end0'), 
-                                        request.POST.get('day0'), 
+                    if (is_availible(datetime.strptime(request.POST.get('time_start0'), '%H:%M').time(), 
+                                        datetime.strptime(request.POST.get('time_end0'), '%H:%M').time(), 
+                                        int(request.POST.get('day0')), 
                                         item.time_start, 
                                         item.time_end, 
                                         item.day)):
                         data[0]['count'] += 1
 
+            # Calculations
+            data[0]['count'] = num_team - data[0]['count']
             raw_percent = (data[0]['count'] / num_team) * 100
             data[0]['percent_of_team'] = f"{raw_percent:.1f}"
         else:
@@ -107,14 +110,16 @@ def schedule_tool(request):
             data[1]['active'] = True
             for athlete in team_qset:
                 for item in ScheduleItem.objects.filter(user=athlete.user):
-                    if (count_availible(request.POST.get('time_start0'), 
-                                        request.POST.get('time_end1'), 
+                    if (is_availible(datetime.strptime(request.POST.get('time_start1'), '%H:%M').time(), 
+                                        datetime.strptime(request.POST.get('time_end1'), '%H:%M').time(), 
                                         request.POST.get('day1'), 
                                         item.time_start, 
                                         item.time_end, 
                                         item.day)):
                         data[1]['count'] += 1
 
+            # Calculations
+            data[1]['count'] = num_team - data[1]['count']
             raw_percent = (data[1]['count'] / num_team) * 100
             data[1]['percent_of_team'] = f"{raw_percent:.1f}"
         else:
@@ -127,14 +132,16 @@ def schedule_tool(request):
             data[2]['active'] = True
             for athlete in team_qset:
                 for item in ScheduleItem.objects.filter(user=athlete.user):
-                    if (count_availible(request.POST.get('time_start2'), 
-                                        request.POST.get('time_end2'), 
-                                        request.POST.get('day2'), 
+                    if (is_availible(datetime.strptime(request.POST.get('time_start2'), '%H:%M').time(), 
+                                        datetime.strptime(request.POST.get('time_end2'), '%H:%M').time(), 
+                                        datetime.strptime(request.POST.get('day2')), 
                                         item.time_start, 
                                         item.time_end, 
                                         item.day)):
                         data[2]['count'] += 1
 
+            # Calculations
+            data[2]['count'] = num_team - data[2]['count']
             raw_percent = (data[2]['count'] / num_team) * 100
             data[2]['percent_of_team'] = f"{raw_percent:.1f}"
         else:
@@ -142,8 +149,6 @@ def schedule_tool(request):
     else:
         for item in data:
             item['active'] = False
-
-    print(data)
 
     context = {
         'time_form0': time_form0,
