@@ -92,7 +92,7 @@
                         {% csrf_token %}
                         
                         {% if workout.rsvp %}
-                            <button class="btn btn-outline-danger" name="cancel-btn" value="1">
+                            <button class="btn btn-outline-danger" name="cancel-btn" value="1" {% if is_coach %}disabled{% endif %}>
                                 Cancel RSVP
                                 <input type="hidden" name="rsvp-input" value="{{workout.pk}}">
                             </button>

@@ -96,11 +96,17 @@ def coach_workouts_view(request):
             "pk":workout.pk
         }
         workouts.append(d)
-        
     # Create context
     context = {
         'workout_form':workout_form,
         'workouts': workouts,
+        'rsvp_conflict': {
+            'bool': False,
+            'name': None,
+            'time_start': None,
+            'pk': None
+        },
+        'is_coach': True,
     }
 
     return render(request, 'workouts/home.html', context)
@@ -170,6 +176,7 @@ def athlete_workouts_view(request):
                                             team=team, 
                                             date__range=[date.today(),date.today() + timedelta(days=14)]
                                         ).order_by("date"):
+        print("in for")
         d = {
             "name":workout.name,
             "workout_description":workout.description,
@@ -189,12 +196,14 @@ def athlete_workouts_view(request):
             d['rsvp'] = False
 
         workouts.append(d)
+    print(workouts)
 
     # Create context
     context = {
         'workout_form':workout_form,
         'workouts': workouts,
         'rsvp_conflict': rsvp_conflict,
+        'is_coach': True,
     }
 
     return render(request, 'workouts/home.html', context)

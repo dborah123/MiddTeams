@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from datetime import datetime
+from datetime import date, datetime
 
 from accounts.models import Athlete, Coach, ScheduleItem
 from teams.forms import ScheduleToolForm0, ScheduleToolForm1, ScheduleToolForm2
 from teams.utils import is_availible
+from workouts.models import ExcuseRequest
 
 # Create your views here.
 @login_required(login_url='/login/')
@@ -160,3 +161,43 @@ def schedule_tool(request):
 
     return render(request, 'teams/schedule-tool.html', context)
 
+
+def excuses_view(request):
+    user = request.user
+    if (Coach.objects.filter(user=user)):
+        team = Coach.objects.get(user=user).team
+    else:
+        render()
+
+    todays_excuses = []
+    past_excuses = []
+    future_excuses = []
+
+    # Cycle through different ExcuseRequests
+    for item in ExcuseRequest.objects.filter(team=team):
+        d = {
+            'workout_name': item.workout.name,
+            'workout_date': item.workout.date,
+            'first_name': item.account.user.first_name,
+            'last_name': item.account.user.first_name,
+            'reason': item.reason,
+            'explanation': item.explanation,
+            'workout_pk': item.workout.pk,
+            'pk': item.pk,
+        }
+        if (item.workout.date != None):
+            if (item.workout.date < date.today):
+                past_excuses.append(d)
+            elif (item.workout.date > date.today()):
+                future_excuses.append(d)
+            else:
+                todays_excuses.append(d)
+
+
+    context = {
+        'past_excuse': past_excuses,
+        'todays_excuses': todays_excuses,
+        'future_excuses': future_excuses,
+    }
+
+    return render(request, "teams/excuses.html", context)
