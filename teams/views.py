@@ -201,3 +201,5 @@ def excuses_view(request):
     }
 
     return render(request, "teams/excuses.html", context)
+
+    
