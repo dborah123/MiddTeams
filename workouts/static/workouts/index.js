@@ -1,4 +1,4 @@
-function handleAlertsRSVPConflict(num, name, time_start){
+function handleAlertsRSVPConflict(num, name, time_start, link){
     /*
     Parameters:
     num: string of the number designating what specific alert box we
@@ -16,6 +16,7 @@ function handleAlertsRSVPConflict(num, name, time_start){
             Conflicting workout already RSVP'd for:
             <strong>Name: </strong>${name}
             <strong>Start time: </strong> ${time_start}
+            <a href=${link} class="stretched-link"></a>
         </div>
     `
 }

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block scripts %}
+    <script src="{% static 'teams/index.js' %}"></script>
+{% endblock scripts %}
+
+{% block title %}
+    Excuses
+{% endblock title %}
+
+{% block content %}
+    
+    <h3><strong>Excuses</strong></h3>
+    <hr>
+
+    <!-- Today's Excuses -->
+    <h5><strong>Excuses for Today</strong></h5>
+    {% for item in todays_excuses %}
+        <div class="card">
+            <div class="card-header">
+                <h5>{{item.first_name}} {{item.last_name}}</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'workouts:workout-detail' item.workout_pk %}}">
+                    <div>
+                        <strong>Workout:</strong> {{item.workout_name}}
+                    </div>
+                </a>
+                <br>
+                <strong>%Workout Date;:</strong> {{item.workout_data}}
+                <br>
+                <strong>Reason:</strong> {{item.reason}}
+                <br>
+                <strong>Explanation</strong> {{item.explanation}}
+            </div>
+        </div>
+    {% endfor %}
+
+    <hr>
+    <!-- Future Excuses-->
+    <h5><strong>Future Excuses</strong></h5>
+    {% for item in future_excuses %}
+        <div class="card">
+            <div class="card-header">
+                <h5>{{item.first_name}} {{item.last_name}}</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'workouts:workout-detail' item.workout_pk %}}">
+                    <div>
+                        <strong>Workout:</strong> {{item.workout_name}}
+                    </div>
+                </a>
+                <br>
+                <strong>%Workout Date;:</strong> {{item.workout_data}}
+                <br>
+                <strong>Reason:</strong> {{item.reason}}
+                <br>
+                <strong>Explanation</strong> {{item.explanation}}
+            </div>
+        </div>
+    {% endfor %}
+
+    <hr>
+    <!-- Past Excuses-->
+    <h5><strong>Past Excuses</strong></h5>
+    {% for item in past_excuses %}
+        <div class="card">
+            <div class="card-header">
+                <h5>{{item.first_name}} {{item.last_name}}</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'workouts:workout-detail' item.workout_pk %}}">
+                    <div>
+                        <strong>Workout:</strong> {{item.workout_name}}
+                    </div>
+                </a>
+                <br>
+                <strong>Workout Date:</strong> {{item.workout_data}}
+                <br>
+                <strong>Reason:</strong> {{item.reason}}
+                <br>
+                <strong>Explanation</strong> {{item.explanation}}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}
+
+

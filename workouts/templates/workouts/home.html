@@ -92,7 +92,7 @@
                         {% csrf_token %}
                         
                         {% if workout.rsvp %}
-                            <button class="btn btn-outline-danger" name="cancel-btn" value="1">
+                            <button class="btn btn-outline-danger" name="cancel-btn" value="1" {% if is_coach %}disabled{% endif %}>
                                 Cancel RSVP
                                 <input type="hidden" name="rsvp-input" value="{{workout.pk}}">
                             </button>
@@ -122,10 +122,12 @@
 
     <!-- Scripts -->
     <script type="text/javascript">
-        
         if ({{rsvp_conflict.bool}}) {
-            console.log("in if");
-            handleAlertsRSVPConflict("0", "{{rsvp_conflict.name}}", "{{rsvp_conflict.time_start}}");
+            handleAlertsRSVPConflict("0", 
+                                    "{{rsvp_conflict.name}}", 
+                                    "{{rsvp_conflict.time_start}}", 
+                                    "{% url 'workouts:workout-detail' rsvp_conflict.pk %}"
+                                    );
         }
 
     </script>

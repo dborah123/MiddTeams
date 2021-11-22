@@ -37,5 +37,6 @@ EXCUSE_OPTIONS = (
 class ExcuseRequest(models.Model):
     account = models.ForeignKey("accounts.Athlete", on_delete=models.CASCADE)
     workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE,blank=True,null=True)
     reason = models.CharField(choices=EXCUSE_OPTIONS, max_length=200)
     explanation = models.TextField(default="Excuse explanation")
