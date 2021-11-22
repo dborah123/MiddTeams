@@ -8,12 +8,15 @@
 
 {% block content %}
 
-    <h2 class="alert alert-success">{{team}} Roster</h2>
+    <h2 style="text-align:center"> {{team}} Roster</h2>
     <hr>
 
     <!-- List Coaches -->
     <div class="mt-4">
-        <h4 class="alert alert-info">Coaches</h4>
+        <h4 class="alert alert-info" style="background-color: #003882;color:white">
+            Coaches
+        </h4>
+        <h4 style="text-align:center"></h4>
         {% for coach in coaches %}
             <div class="mt-1">
                 <strong>Name: </strong>{{coach.first_name}} {{coach.last_name}}
@@ -33,7 +36,9 @@
 
     <div class="mt-4">
         <!-- List athletes -->
-        <h4 class="alert alert-info">Athletes</h4>
+        <h4 class="alert alert-info" style="background-color: #003882;color:white">
+            Athletes
+        </h4>
         {% for athlete in athlete_roster %}
             
             {% if captain %}
