@@ -2,7 +2,7 @@ from django import forms
 from django.forms import fields
 from django.forms import widgets
 from django.forms.widgets import NumberInput
-from .models import Workout
+from .models import EXCUSE_OPTIONS, ExcuseRequest, Workout
 
 
 class WorkoutCreationForm(forms.ModelForm):
@@ -141,4 +141,27 @@ class WorkoutForm(forms.ModelForm):
             self.fields['location'].disabled = True
 
 
+class ExcuseForm(forms.ModelForm):
 
+    reason = forms.ChoiceField(choices=EXCUSE_OPTIONS, widget=forms.Select(attrs={'class':'form-select'}))
+
+    class Meta:
+        model = ExcuseRequest
+
+        fields = (
+            'reason',
+            'explanation',
+        )
+
+        widgets = {
+            'explanation': forms.Textarea(
+                attrs={
+                    'class':'form-control',
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ExcuseForm, self).__init__(*args, **kwargs)
+        self.fields['explanation'].label=""
+    

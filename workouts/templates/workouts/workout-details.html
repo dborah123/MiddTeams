@@ -61,8 +61,8 @@
                         <input type="text" class="form-control" placeholder="{{workout_creator}}" disabled>
                     </div>
 
-                    <button class="btn btn-outline-primary mt-1" name="update" input="1" {% if not_creator %}disabled{% endif %}>Update workout</button>
-                    <button class="btn btn-outline-danger mt-1" name="delete" input="1" {% if not_creator %}disabled{% endif %}>Delete</button>
+                    <button class="btn btn-outline-primary mt-1" name="update" value="1" {% if not_creator %}disabled{% endif %}>Update workout</button>
+                    <button class="btn btn-outline-danger mt-1" name="delete-btn" value="1" {% if not_creator %}disabled{% endif %}>Delete</button>
 
                     {% if coach_bool %}
                         <button class="btn btn-outline-success mt-1" name="rsvp-btn" value="1" disabled>
@@ -103,8 +103,48 @@
         </div>
     </div>
 
+        <!-- Excuse Modal-->
+    <div class="modal fade" id="cancelModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Excuse</h5>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupSelect01">Reason</label>
+                            {{excuse_form.reason}}    
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupSelect01">Explanation</label>
+                            {{excuse_form.explanation}}    
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" value = "1" name="excuse-btn">
+                        Create Excuse
+                    </button>
+                </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Scripts -->
     <script type="text/javascript">
+        if ({{trigger_modal}}) {
+            var myModal = new bootstrap.Modal(document.getElementById('cancelModal'), {
+                                                keyboard: false,
+                                                backdrop:'static'
+                                            });
+            myModal.show();
+
+        }
+
         if ({{rsvp_conflict.bool}}) {
             handleAlertsRSVPConflict("0",
                                      "{{rsvp_conflict.name}}", 

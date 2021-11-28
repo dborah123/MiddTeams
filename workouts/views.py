@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.db.models.query_utils import Q
-from .forms import WorkoutCreationForm, WorkoutForm
+from .forms import ExcuseForm, WorkoutCreationForm, WorkoutForm
 from accounts.models import Coach, Athlete
 from .models import Workout
 from datetime import date, timedelta
@@ -8,42 +8,6 @@ from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-
-def home_view1(request):
-    workout_form = WorkoutCreationForm(request.POST or None)
-    '''
-    Home page view
-    '''
-    # Initialize data
-    user=request.user
-
-    if(request.method == "POST" 
-        and workout_form.is_valid() 
-        and request.POST.get("submit")):
-
-        if(Coach.objects.filter(user=user).exists()):
-            coach = Coach.objects.get(user=user)
-            team = coach.team
-        else:
-            athlete = Athlete.objects.get(user=user)
-            team = athlete.team
-
-        workout = workout_form.save(commit=False)
-        workout.creator=user
-
-        if (
-            Workout.objects.filter(
-                Q(time_start__range=[workout.time_start, workout.time_end], date=workout.date, team=team) |
-                Q(time_end__range=[workout.time_start, workout.time_end], date=workout.date, team=team) |
-                Q(time_start__lte=workout.time_start, time_end__gte=workout.time_end, date=workout.date, team=team)
-            )):
-            already_exists = 1
-        else:
-            already_exists = 2
-            workout.save()
-
-        workout = WorkoutCreationForm()
-
 
 @login_required(login_url='/login/')
 def home_view(request):
@@ -76,7 +40,11 @@ def coach_workouts_view(request):
         workout.creator = user
         workout.team = team
 
-        if (not workout.not_valid()):
+        if (not workout.not_valid()
+            and not Workout.objects.filter(
+                                        date=workout.date, 
+                                        name=workout.name
+                                        )):
             workout.save()
 
         workout_form = WorkoutCreationForm()
@@ -107,6 +75,7 @@ def coach_workouts_view(request):
             'pk': None
         },
         'is_coach': True,
+        'name': user.first_name,
     }
 
     return render(request, 'workouts/home.html', context)
@@ -120,9 +89,11 @@ def athlete_workouts_view(request):
     team = user_athlete.team
 
     workout_form = WorkoutCreationForm(request.POST or None)
+    excuse_form = ExcuseForm(request.POST or None)
 
     workouts = []
-
+    dersvp_pk = None
+    trigger_model = 0
     rsvp_conflict = {
         'bool': 0,
         'name': None,
@@ -138,7 +109,11 @@ def athlete_workouts_view(request):
         workout.creator = user
         workout.team = team
 
-        if (not workout.not_valid()):
+        if (not workout.not_valid()
+            and not Workout.objects.filter(
+                                        date=workout.date, 
+                                        name=workout.name
+                                        )):
             workout.save()
 
         workout_form = WorkoutCreationForm()
@@ -167,16 +142,28 @@ def athlete_workouts_view(request):
 
         # Cancel RSVP to workout
         if (request.POST.get('cancel-btn', None)):
-                workout_rsvp_pk = request.POST.get('rsvp-input')
-                workout_to_cancel = Workout.objects.get(pk=workout_rsvp_pk)
-                user_athlete.workouts_rsvped_for.remove(workout_to_cancel)
+            workout_rsvp_pk = request.POST.get('rsvp-input')
+            workout_to_cancel = Workout.objects.get(pk=workout_rsvp_pk)
+            user_athlete.workouts_rsvped_for.remove(workout_to_cancel)
+            trigger_model = 1
+            dersvp_pk = workout_rsvp_pk
+
+        if (request.POST.get('excuse-btn', None)
+            and excuse_form.is_valid()):
+            workout_rsvp_pk = request.POST.get('excuse-workout-pk', None)
+            excuse = excuse_form.save(commit=False)
+            excuse.account = user_athlete
+            excuse.workout = Workout.objects.get(pk=workout_rsvp_pk)
+            excuse.team = team
+            excuse.save()
+            excuse_form = ExcuseForm()
+
 
 
     for workout in Workout.objects.filter(
                                             team=team, 
                                             date__range=[date.today(),date.today() + timedelta(days=14)]
                                         ).order_by("date"):
-        print("in for")
         d = {
             "name":workout.name,
             "workout_description":workout.description,
@@ -196,14 +183,17 @@ def athlete_workouts_view(request):
             d['rsvp'] = False
 
         workouts.append(d)
-    print(workouts)
 
     # Create context
     context = {
-        'workout_form':workout_form,
+        'workout_form': workout_form,
+        'excuse_form': excuse_form,
         'workouts': workouts,
         'rsvp_conflict': rsvp_conflict,
-        'is_coach': True,
+        'is_coach': False,
+        'name':user.first_name,
+        'trigger_modal': trigger_model,
+        'dersvp': dersvp_pk,
     }
 
     return render(request, 'workouts/home.html', context)
@@ -224,6 +214,8 @@ def workout_detail_view(request, **kwargs):
         'pk': None,
     }
     rsvpd_athletes = []
+    excuse_form = ExcuseForm(request.POST or None)
+    trigger_modal = 0
 
     # Check if user is coach or athlete
     if (Coach.objects.filter(user=request.user)):
@@ -251,37 +243,51 @@ def workout_detail_view(request, **kwargs):
                                     disable_fields=True)
         not_creator = True
 
-    # Handles deletion of workout
-    if (request.POST.get("delete", None)):
-        workout.delete()
-        return redirect(home_view)
 
     # Handle RSVPing
-    if (request.method == "POST" 
-        and not coach_bool):
-        # RSVP user to specified workout
-        user_athlete = Athlete.objects.get(user=request.user)
+    if (request.method == "POST"):
+        # Handles deletion of workout
+        if (request.POST.get("delete-btn", None)):
+            workout.delete()
+            return redirect('/')
 
-        if (request.POST.get('rsvp-btn', None)):
-            # Checking if user has already rsvped for a workout
-            workout_rsvp_qset = user_athlete.workouts_rsvped_for.filter(
-                                Q(date=workout.date, time_start__range=[workout.time_start, workout.time_end]) |
-                                Q(date=workout.date, time_end__range=[workout.time_start, workout.time_end]) |
-                                Q(date=workout.date, time_start__lte=workout.time_start, time_end__gte=workout.time_end)
-                                )
+        if (not coach_bool):
+            # RSVP user to specified workout
+            user_athlete = Athlete.objects.get(user=request.user)
 
-            
-            if (workout_rsvp_qset and not workout_rsvp_qset[0] == workout):
-                rsvp_conflict['bool'] = 1
-                rsvp_conflict['name'] = str(workout_rsvp_qset[0].name)
-                rsvp_conflict['time_start'] = str( workout_rsvp_qset[0].time_start)
-                rsvp_conflict['pk'] = workout_rsvp_qset[0].pk
-            else:
-                user_athlete.workouts_rsvped_for.add(workout)
+            if (request.POST.get('rsvp-btn', None)):
+                # Checking if user has already rsvped for a workout
+                workout_rsvp_qset = user_athlete.workouts_rsvped_for.filter(
+                                    Q(date=workout.date, time_start__range=[workout.time_start, workout.time_end]) |
+                                    Q(date=workout.date, time_end__range=[workout.time_start, workout.time_end]) |
+                                    Q(date=workout.date, time_start__lte=workout.time_start, time_end__gte=workout.time_end)
+                                    )
 
-        # Cancel RSVP to workout
-        if (request.POST.get('cancel-btn', None)):
-                user_athlete.workouts_rsvped_for.remove(workout)
+                
+                if (workout_rsvp_qset and not workout_rsvp_qset[0] == workout):
+                    rsvp_conflict['bool'] = 1
+                    rsvp_conflict['name'] = str(workout_rsvp_qset[0].name)
+                    rsvp_conflict['time_start'] = str( workout_rsvp_qset[0].time_start)
+                    rsvp_conflict['pk'] = workout_rsvp_qset[0].pk
+                else:
+                    user_athlete.workouts_rsvped_for.add(workout)
+
+            # Cancel RSVP to workout
+            if (request.POST.get('cancel-btn', None)):
+                    user_athlete.workouts_rsvped_for.remove(workout)
+                    trigger_modal = 1
+
+            # Handle Excuse form
+            if (request.POST.get('excuse-btn') 
+                and excuse_form.is_valid()):
+                excuse = excuse_form.save(commit=False)
+                excuse.account = user_athlete
+                excuse.workout = workout
+                excuse.team = user_athlete.team
+                excuse.save()
+                excuse_form = ExcuseForm()
+
+
 
     # Packaging athletes RSVP'd for this workout
     for item in Athlete.objects.filter(workouts_rsvped_for=workout):
@@ -299,7 +305,6 @@ def workout_detail_view(request, **kwargs):
         else:
             already_rsvped = False
 
-
     context = {
         'workout_form': workout_form,
         'workout_team': workout.team,
@@ -310,6 +315,9 @@ def workout_detail_view(request, **kwargs):
         'changed': changed,
         'rsvp_conflict': rsvp_conflict,
         'already_rsvped': already_rsvped,
+
+        'excuse_form': excuse_form,
+        'trigger_modal': trigger_modal,
 
         'rsvpd_athletes': rsvpd_athletes,
     }

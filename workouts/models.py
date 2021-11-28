@@ -30,13 +30,17 @@ class Workout(models.Model):
             return False
 
 EXCUSE_OPTIONS = (
-    ('#1', 'Sick'),
-    ('#2', 'Injured'),
+    ('1', 'Sick'),
+    ('2', 'Injured'),
+    ('3', 'Other')
 )
 
 class ExcuseRequest(models.Model):
-    account = models.ForeignKey("accounts.Athlete", on_delete=models.CASCADE)
-    workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE,blank=True,null=True)
+    account = models.ForeignKey("accounts.Athlete", on_delete=models.CASCADE, blank=True,null=True)
+    workout = models.ForeignKey(Workout, on_delete=models.CASCADE, blank=True,null=True)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True,null=True)
     reason = models.CharField(choices=EXCUSE_OPTIONS, max_length=200)
     explanation = models.TextField(default="Excuse explanation")
+
+    def __str__(self):
+        return f"{self.account.user.first_name} {self.account.user.last_name}: {self.reason}"

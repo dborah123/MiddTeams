@@ -15,9 +15,15 @@
     <div id="alert-box-0"></div>
 
     <h2 style="color: #003882;text-align:center">
-            Welcome 
+            Welcome {{name}}
     </h2>
 
+    <!-- Button trigger modal -->
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <button type="button" class="btn btn-primary"; data-bs-toggle="modal" data-bs-target="#exampleModal" style="background-color: #003882;">
+            Create Workout
+        </button>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -90,8 +96,8 @@
                     <p class="card-text">{{workout.description}}</p>
                     <form action="" method="POST">
                         {% csrf_token %}
-                        
-                        {% if workout.rsvp %}
+                        {% comment %} ; data-bs-toggle="modal" data-bs-target="#cancelModal" {% endcomment %}
+                        {% if workout.rsvp %} 
                             <button class="btn btn-outline-danger" name="cancel-btn" value="1" {% if is_coach %}disabled{% endif %}>
                                 Cancel RSVP
                                 <input type="hidden" name="rsvp-input" value="{{workout.pk}}">
@@ -113,15 +119,52 @@
         {% endfor %}
     </div>
 
-    <!-- Button trigger modal -->
-    <div class="d-grid gap-2 col-6 mx-auto">
-        <button type="button" class="btn btn-primary"; data-bs-toggle="modal" data-bs-target="#exampleModal" style="background-color: #003882;">
-            Create Workout
-        </button>
+    <button class="invisible" name="cancel-btn" value="1"; data-bs-show="modal" data-bs-target="#cancelModal" {% if is_coach %}disabled{% endif %}>
+    </button>
+
+
+    <!-- Excuse Modal-->
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Excuse</h5>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupSelect01">Reason</label>
+                            {{excuse_form.reason}}    
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupSelect01">Explanation</label>
+                            {{excuse_form.explanation}}    
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" value = "1" name="excuse-btn">
+                        Create Excuse
+                        <input type="hidden" name="excuse-workout-pk" value="{{dersvp}}">
+                    </button>
+                </div>
+                    </form>
+            </div>
+        </div>
     </div>
+
 
     <!-- Scripts -->
     <script type="text/javascript">
+
+        if ({{trigger_modal}}) {
+            var myModal = new bootstrap.Modal(document.getElementById('cancelModal'), {
+            keyboard: false
+            });
+            myModal.show();
+        }
+
         if ({{rsvp_conflict.bool}}) {
             handleAlertsRSVPConflict("0", 
                                     "{{rsvp_conflict.name}}", 

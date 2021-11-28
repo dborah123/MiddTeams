@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from datetime import date, datetime
 
@@ -167,7 +167,7 @@ def excuses_view(request):
     if (Coach.objects.filter(user=user)):
         team = Coach.objects.get(user=user).team
     else:
-        render()
+        return redirect('/')
 
     todays_excuses = []
     past_excuses = []
@@ -186,7 +186,7 @@ def excuses_view(request):
             'pk': item.pk,
         }
         if (item.workout.date != None):
-            if (item.workout.date < date.today):
+            if (item.workout.date < date.today()):
                 past_excuses.append(d)
             elif (item.workout.date > date.today()):
                 future_excuses.append(d)
