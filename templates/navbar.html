@@ -4,6 +4,9 @@
 {% url 'teams:roster' as path_to_roster %}
 {% url 'accounts:profile' as path_to_profile %}
 {% url 'logout' as path_to_logout %}
+{% url 'workouts:workout-all' as path_to_all_workouts %}
+{% url 'teams:schedule-tool' as path_to_tool %}
+{% url 'teams:excuses' as path_to_excuses %}
 
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #003882;">
     <div class="container-fluid">
@@ -13,10 +16,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == path_to_workouts %}active{% endif %}" aria-current="page" href="{{path_to_workouts}}">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.path == path_to_workouts %}active{% endif %}" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Workouts
                     </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{{path_to_workouts}}">Upcoming Workouts</a></li>
+                        <li><a class="dropdown-item" href="{{path_to_all_workouts}}">All Workouts</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == path_to_schedule %}active{% endif %}" href="{{path_to_schedule}}">
@@ -25,7 +32,17 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == path_to_roster %}active{% endif %}" href="{{path_to_roster}}">
-                        Team Roster
+                        Roster
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == path_to_tool %}active{% endif %}" href="{{path_to_tool}}">
+                        Schedule Tool
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == path_to_excuses %}active{% endif %}" href="{{path_to_excuses}}">
+                        Coach Info
                     </a>
                 </li>
                 <li class="nav-item">
