@@ -6,7 +6,7 @@ from datetime import date, datetime
 from accounts.models import Athlete, Coach, ScheduleItem
 from teams.forms import ScheduleToolForm0, ScheduleToolForm1, ScheduleToolForm2
 from teams.utils import is_availible
-from workouts.models import ExcuseRequest
+from workouts.models import EXCUSE_OPTIONS, ExcuseRequest
 
 # Create your views here.
 @login_required(login_url='/login/')
@@ -62,6 +62,7 @@ def roster_view(request):
     return render(request, 'teams/roster.html', context)
 
 
+@login_required(login_url='/login/')
 def schedule_tool(request):
     '''
     Scheduling tool
@@ -162,6 +163,7 @@ def schedule_tool(request):
     return render(request, 'teams/schedule-tool.html', context)
 
 
+@login_required(login_url='/login/')
 def excuses_view(request):
     user = request.user
     if (Coach.objects.filter(user=user)):
@@ -179,8 +181,8 @@ def excuses_view(request):
             'workout_name': item.workout.name,
             'workout_date': item.workout.date,
             'first_name': item.account.user.first_name,
-            'last_name': item.account.user.first_name,
-            'reason': item.reason,
+            'last_name': item.account.user.last_name,
+            'reason': EXCUSE_OPTIONS[int(item.reason)-1][1],
             'explanation': item.explanation,
             'workout_pk': item.workout.pk,
             'pk': item.pk,

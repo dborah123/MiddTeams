@@ -10,44 +10,59 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #003882;">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{path_to_workouts}}">MiddTeams</a>
+        <a class="navbar-brand nav-title" href="{{path_to_workouts}}">
+            <img id="navbar-logo" src="https://www.nsnsports.net/wp-content/uploads/2016/01/middlebury_panthers_logo-1.png">
+            MiddTeams
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if request.path == path_to_workouts %}active{% endif %}" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Workouts
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{{path_to_workouts}}">Upcoming Workouts</a></li>
-                        <li><a class="dropdown-item" href="{{path_to_all_workouts}}">All Workouts</a></li>
-                    </ul>
-                </li>
+                <div class="nav-words">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.path == path_to_workouts %}active{% endif %}" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Workouts                        
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{{path_to_workouts}}">Upcoming Workouts</a></li>
+                            <li><a class="dropdown-item" href="{{path_to_all_workouts}}">All Workouts</a></li>
+                        </ul>
+                    </li>
+                </div>
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == path_to_schedule %}active{% endif %}" href="{{path_to_schedule}}">
-                        Schedule
+                        <div class="nav-words">
+                            Schedule
+                        </div>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == path_to_roster %}active{% endif %}" href="{{path_to_roster}}">
-                        Roster
+                        <div class="nav-words">
+                            Roster
+                        </div>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == path_to_tool %}active{% endif %}" href="{{path_to_tool}}">
-                        Schedule Tool
+                        <div class="nav-words">
+                            Schedule Tool
+                        </div>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == path_to_excuses %}active{% endif %}" href="{{path_to_excuses}}">
-                        Coach Info
+                        <div class="nav-words">
+                            Coach Info
+                        </div>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == path_to_profile %}active{% endif %}" href="{{path_to_profile}}">
-                        Profile
+                        <div class="nav-words">
+                            Profile
+                        </div>
                     </a>
                 </li>
             </ul>

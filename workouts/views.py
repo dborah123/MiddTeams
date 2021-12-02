@@ -3,7 +3,7 @@ from django.db.models.query_utils import Q
 from .forms import ExcuseForm, WorkoutCreationForm, WorkoutForm
 from accounts.models import Coach, Athlete
 from .models import Workout
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, time
 
 from django.contrib.auth.decorators import login_required
 
@@ -31,7 +31,15 @@ def coach_workouts_view(request):
     user_coach = Coach.objects.get(user=user)
     team = user_coach.team
 
+    if (datetime.now().hour < time(12).hour):
+        time_of_day = 0
+    elif (datetime.now().hour < time(18).hour):
+        time_of_day = 1
+    else:
+        time_of_day = 2
+
     workouts = []
+    
     if(request.method == "POST" 
         and workout_form.is_valid() 
         and request.POST.get("submit")):
@@ -76,6 +84,7 @@ def coach_workouts_view(request):
         },
         'is_coach': True,
         'name': user.first_name,
+        'time_of_day':time_of_day,
     }
 
     return render(request, 'workouts/home.html', context)
@@ -90,6 +99,13 @@ def athlete_workouts_view(request):
 
     workout_form = WorkoutCreationForm(request.POST or None)
     excuse_form = ExcuseForm(request.POST or None)
+
+    if (datetime.now().hour < time(12).hour):
+        time_of_day = 0
+    elif (datetime.now().hour < time(18).hour):
+        time_of_day = 1
+    else:
+        time_of_day = 2
 
     workouts = []
     dersvp_pk = None
@@ -194,6 +210,7 @@ def athlete_workouts_view(request):
         'name':user.first_name,
         'trigger_modal': trigger_model,
         'dersvp': dersvp_pk,
+        'time_of_day': time_of_day,
     }
 
     return render(request, 'workouts/home.html', context)

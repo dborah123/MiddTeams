@@ -312,8 +312,6 @@ def schedule_view(request, **kwargs):
 
     # Getting data for schedule in two parts: schedule items (ie classes) and workouts scheduled
 
-    # Getting ScheduleItems
-
     # Querying all ScheduleItems in the database
     schedule_items = ScheduleItem.objects.filter(user=user)
 
@@ -380,7 +378,6 @@ def schedule_item_view(request, **kwargs):
 
     # Verify that user is ower of schedule item
     if (user.pk != int(user_pk)):
-        print(type(user.pk), type(user_pk))
         return redirect(f'/accounts/profile/schedule/user={user_pk}') 
 
     # Get schedule item

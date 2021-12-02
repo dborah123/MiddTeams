@@ -15,7 +15,14 @@
     <div id="alert-box-0"></div>
 
     <h2 style="color: #003882;text-align:center">
-            Welcome {{name}}
+        {% if time_of_day == 0 %}
+            Good morning, 
+        {% elif time_of_day == 1 %}
+            Good afternoon, 
+        {% else %}
+            Good evening, 
+        {% endif %}
+        {{name}}
     </h2>
 
     <!-- Button trigger modal -->
