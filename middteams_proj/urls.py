@@ -27,7 +27,6 @@ urlpatterns = [
     path('teams/', include('teams.urls', namespace='teams')),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
-
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -3,139 +3,18 @@ from django.shortcuts import redirect, render
 
 from accounts.models import Athlete, Coach, ScheduleItem
 from accounts.utils import change_password
-from teams.models import Team
 from workouts.models import Workout
-from .forms import AthleteForm, CoachCreationForm, AthleteCreationForm, CoachForm, PasswordForm, ScheduleItemForm, UserForm
+from .forms import AthleteForm, CoachForm, PasswordForm, ScheduleItemForm, UserForm
 from django.contrib.auth.models import User
 import json
 
 from django.contrib.auth.decorators import login_required
 
-# Create your views here.
-def create_coach_view(request):
-    coach_create_form = CoachCreationForm()
-    email_taken = False
-    password_match = True
-
-    # If user submitted form
-    if(request.method == "POST"):
-
-        # Checking if passwords match
-        password = request.POST.get("password")
-        password_check = request.POST.get("password_check")
-
-        if(password != password_check):
-            password_match = False
-
-        # Creating user model
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
-
-        email = request.POST.get("email")
-
-        # Check if email is already taken
-        if(User.objects.filter(email=email)):
-            email_taken = True
-        else:
-            user = User.objects.create_user(
-                                            first_name=first_name, 
-                                            last_name=last_name, 
-                                            username=email.split('@')[0],
-                                            password=password, 
-                                            email=email
-                                            )
-
-            # Creating coach model
-            profile_pic = request.POST.get("profile_picture")
-            team = request.POST.get("team")
-            formal_title = request.POST.get("formal_title")
-            phone_number = request.POST.get("phone_number")
-            Coach.objects.create(
-                                    user=user,
-                                    profile_picture=profile_pic,
-                                    team=Team.objects.get(pk=team),
-                                    formal_title=formal_title,
-                                    phone_number=phone_number,
-                                )
-            # TODO: render login page here
-
-
-    context = {
-        'coach_create_form':coach_create_form,
-        'password_match': password_match,
-        'email_taken':email_taken,
-    }
-
-    return render(request, 'accounts/create-coach.html', context)
-
-
-def create_athlete_view(request):
-    athlete_create_form = AthleteCreationForm()
-    email_taken = False
-    wrong_team_code = False
-    password_match = True
-
-    # If user submitted form
-    if(request.method == "POST"):
-
-        # Verifying team code to add them to roster
-        team_code = request.POST.get("team_code")
-        team = Team.objects.get(pk=request.POST.get("team"))
-
-        # Getting passwords to check if they match
-        password = request.POST.get("password")
-        password_check = request.POST.get("password_check")
-
-        if(team_code != team.team_code):
-            wrong_team_code = True
-        
-        elif(password != password_check):
-            password_match = False
-
-        else:
-            #Creating user model
-            first_name = request.POST.get("first_name")
-            last_name = request.POST.get("last_name")
-
-            email = request.POST.get("email")
-
-            # Check if email is already taken
-            if(User.objects.filter(email=email)):
-                email_taken = True
-            else:
-                user = User.objects.create_user(
-                                                first_name=first_name, 
-                                                last_name=last_name, 
-                                                username=email.split('@')[0],
-                                                password=password, 
-                                                email=email
-                                                )
-
-                #Creating Athlete model object
-                profile_pic = request.POST.get("profile_picture")
-                position = request.POST.get("position")
-
-                Athlete.objects.create(
-                                        user=user,
-                                        profile_picture=profile_pic,
-                                        team=team,
-                                        position=position,
-                                        )
-
-                # TODO: render login page here
-
-    context = {
-        'athlete_create_form':athlete_create_form,
-        'password_match':password_match,
-        'email_taken':email_taken,
-        'wrong_team_code':wrong_team_code,
-    }
-
-    return render(request, 'accounts/create-athlete.html', context)
-
-
 @login_required(login_url='/login/')
 def profile_view(request):
+    '''
+    Redirects user to specific profile page depending other whether they're an athlete or coach
+    '''
 
     # Query if the user is a coach
     is_coach_user = Coach.objects.filter(user=request.user)
@@ -149,7 +28,9 @@ def profile_view(request):
 
 @login_required(login_url='/login/')
 def coach_profile_view(request):
-
+    '''
+    Displays coach's profile
+    '''
     # Get user and create form
     user = request.user
     user_form = UserForm(request.POST or None, request.FILES or None, instance=user)
@@ -214,6 +95,7 @@ def athlete_profile_view(request):
     user = request.user
     user_form = UserForm(request.POST or None, request.FILES or None, instance=user)
 
+    # Get athlete and create form
     athlete_profile = Athlete.objects.get(user=request.user)
     athlete_profile_form = AthleteForm(request.POST or None, request.FILES or None, instance=athlete_profile)
     profile_changed = 0
@@ -273,21 +155,23 @@ def schedule_view(request, **kwargs):
     """
     Collects schedule of Athlete designated by pk and passes it to js, displaying schedule
     """
-
-    # Get pk and user
+    # Get pk and user (owner of schedule)
     user_pk = kwargs.get('pk')
     user = User.objects.get(pk=user_pk)
 
+    # Check if actual user is owner of this schedule as it determines permissions
     if (request.user.pk != user.pk):
         not_owner = True
+        schedule_item_form = None
     else:
+        schedule_item_form = ScheduleItemForm(request.POST or None)
         not_owner = False
 
-    # Initialize more variables
-    schedule_item_form = ScheduleItemForm(request.POST or None)
+    # Initialize schedule form
     schedule_data = []
     already_exists = 0
 
+    # Handle ScheduleItem creation
     if (request.method == "POST" 
         and schedule_item_form.is_valid() 
         and request.POST.get("submit")):
@@ -295,7 +179,7 @@ def schedule_view(request, **kwargs):
         schedule_item = schedule_item_form.save(commit=False)
         schedule_item.user = user
 
-        # VALID IS A FUNCTION IN MODELS THAT VALIDATES IF THAT MODEL OBJECT IS VALID...CREATE THIS FOR WORKOUTS
+        # Check if there is conflicting items or form isn't valid
         if (schedule_item.not_valid() or 
             ScheduleItem.objects.filter(
                 Q(time_start__range=[schedule_item.time_start, schedule_item.time_end], day=schedule_item.day, user=user) |
@@ -307,12 +191,13 @@ def schedule_view(request, **kwargs):
             already_exists = 2
             schedule_item.save()
 
+        # Reset form
         schedule_item_form = ScheduleItemForm()
 
 
     # Getting data for schedule in two parts: schedule items (ie classes) and workouts scheduled
 
-    # Querying all ScheduleItems in the database
+    # Querying all ScheduleItems in the database connected to the current user
     schedule_items = ScheduleItem.objects.filter(user=user)
 
     # Append schedule items to specific day
@@ -354,27 +239,27 @@ def schedule_view(request, **kwargs):
             }
             schedule_data.append(data)
 
-
     context = {
         'user_first_name':user.first_name,
-        'schedule_data': schedule_data,
+        'schedule_data': json.dumps(schedule_data),
         'schedule_item_form': schedule_item_form,
         'already_exists': already_exists,
         'not_owner': not_owner,
     }
-
-    context['schedule_data'] = json.dumps(context['schedule_data'])
 
     return render(request, 'accounts/schedule.html', context)
 
 
 @login_required(login_url='/login/')
 def schedule_item_view(request, **kwargs):
-
-    # Initialize random variables
-    changed = 0
+    '''
+    Displays specific schedule item to user with capability to update and delete
+    '''
+    # Initialize user variables
     user = request.user
     user_pk = kwargs.get('pk')
+
+    changed = 0
 
     # Verify that user is ower of schedule item
     if (user.pk != int(user_pk)):
@@ -386,8 +271,8 @@ def schedule_item_view(request, **kwargs):
 
     # Creating schedule form
     schedule_item_form = ScheduleItemForm(request.POST or None,
-                                 request.FILES or None,
-                                instance=schedule_item)
+                                          request.FILES or None,
+                                          instance=schedule_item)
 
     # Save changes
     if (schedule_item_form.is_valid() and 

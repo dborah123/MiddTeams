@@ -13,6 +13,7 @@
 {% block content %}
 
     <div id="alert-box-0"></div>
+    <div id="perm-alert-box"></div>
 
     <h2 style="color: #003882;text-align:center">
         {% if time_of_day == 0 %}
@@ -130,30 +131,30 @@
     </button>
 
 
-    <!-- Excuse Modal-->
+    <!-- Absence Modal-->
     <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="cancelModalLabel">Excuse</h5>
+                    <h5 class="modal-title" id="cancelModalLabel">Absence</h5>
                 </div>
                 <div class="modal-body">
                     <form action="" method="POST">
                         {% csrf_token %}
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="inputGroupSelect01">Reason</label>
-                            {{excuse_form.reason}}    
+                            {{absence_form.reason}}    
                         </div>
 
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="inputGroupSelect01">Explanation</label>
-                            {{excuse_form.explanation}}    
+                            {{absence_form.explanation}}    
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" value = "1" name="excuse-btn">
+                    <button type="submit" class="btn btn-primary" value = "1" name="absence-btn">
                         Create Excuse
-                        <input type="hidden" name="excuse-workout-pk" value="{{dersvp}}">
+                        <input type="hidden" name="absence-workout-pk" value="{{dersvp}}">
                     </button>
                 </div>
                     </form>
@@ -161,6 +162,10 @@
         </div>
     </div>
 
+    {% comment %} <!-- Form for redirect_bool change in view -->
+    <form id="redirect-reset-form" action="" method="POST">
+        <input type="hidden" name="redirect-reset" value="1">
+    </form> {% endcomment %}
 
     <!-- Scripts -->
     <script type="text/javascript">
@@ -178,6 +183,10 @@
                                     "{{rsvp_conflict.time_start}}", 
                                     "{% url 'workouts:workout-detail' rsvp_conflict.pk %}"
                                     );
+        }
+
+        if ({{redirect_bool}}) {
+            handleRedirectAlerts("\"Coach Info\" unavailible to athletes");
         }
 
     </script>

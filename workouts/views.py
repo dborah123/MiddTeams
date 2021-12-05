@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.db.models.query_utils import Q
-from .forms import ExcuseForm, WorkoutCreationForm, WorkoutForm
+from .forms import AbsenceForm, WorkoutCreationForm, WorkoutForm
 from accounts.models import Coach, Athlete
 from .models import Workout
 from datetime import date, datetime, timedelta, time
@@ -9,8 +9,14 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+def home_redirect(login_url='/login'):
+    '''
+    Redirects to actual home page
+    '''
+    return redirect('/0')
+
 @login_required(login_url='/login/')
-def home_view(request):
+def home_view(request, **kwargs):
     # Query if the user is a coach
     is_coach_user = Coach.objects.filter(user=request.user)
 
@@ -18,7 +24,7 @@ def home_view(request):
     if(is_coach_user):
         return coach_workouts_view(request)
     else:
-        return athlete_workouts_view(request)
+        return athlete_workouts_view(request, **kwargs)
 
 
 @login_required(login_url='/login/')
@@ -91,14 +97,15 @@ def coach_workouts_view(request):
 
 
 @login_required(login_url='/login/')
-def athlete_workouts_view(request):
-
+def athlete_workouts_view(request, **kwargs):
     user=request.user
     user_athlete = Athlete.objects.get(user=user)
     team = user_athlete.team
 
     workout_form = WorkoutCreationForm(request.POST or None)
-    excuse_form = ExcuseForm(request.POST or None)
+    absence_form = AbsenceForm(request.POST or None)
+
+    redirect_bool = kwargs.get("redirect")
 
     if (datetime.now().hour < time(12).hour):
         time_of_day = 0
@@ -164,15 +171,15 @@ def athlete_workouts_view(request):
             trigger_model = 1
             dersvp_pk = workout_rsvp_pk
 
-        if (request.POST.get('excuse-btn', None)
-            and excuse_form.is_valid()):
-            workout_rsvp_pk = request.POST.get('excuse-workout-pk', None)
-            excuse = excuse_form.save(commit=False)
-            excuse.account = user_athlete
-            excuse.workout = Workout.objects.get(pk=workout_rsvp_pk)
-            excuse.team = team
-            excuse.save()
-            excuse_form = ExcuseForm()
+        if (request.POST.get('absence-btn', None)
+            and absence_form.is_valid()):
+            workout_rsvp_pk = request.POST.get('absence-workout-pk', None)
+            absence = absence_form.save(commit=False)
+            absence.account = user_athlete
+            absence.workout = Workout.objects.get(pk=workout_rsvp_pk)
+            absence.team = team
+            absence.save()
+            absence_form = AbsenceForm()
 
 
 
@@ -203,14 +210,18 @@ def athlete_workouts_view(request):
     # Create context
     context = {
         'workout_form': workout_form,
-        'excuse_form': excuse_form,
+        'absence_form': absence_form,
+        'trigger_modal': trigger_model,
+
         'workouts': workouts,
+
         'rsvp_conflict': rsvp_conflict,
         'is_coach': False,
         'name':user.first_name,
-        'trigger_modal': trigger_model,
         'dersvp': dersvp_pk,
         'time_of_day': time_of_day,
+
+        'redirect_bool': redirect_bool,
     }
 
     return render(request, 'workouts/home.html', context)
@@ -231,7 +242,7 @@ def workout_detail_view(request, **kwargs):
         'pk': None,
     }
     rsvpd_athletes = []
-    excuse_form = ExcuseForm(request.POST or None)
+    absence_form = AbsenceForm(request.POST or None)
     trigger_modal = 0
 
     # Check if user is coach or athlete
@@ -294,15 +305,15 @@ def workout_detail_view(request, **kwargs):
                     user_athlete.workouts_rsvped_for.remove(workout)
                     trigger_modal = 1
 
-            # Handle Excuse form
-            if (request.POST.get('excuse-btn') 
-                and excuse_form.is_valid()):
-                excuse = excuse_form.save(commit=False)
-                excuse.account = user_athlete
-                excuse.workout = workout
-                excuse.team = user_athlete.team
-                excuse.save()
-                excuse_form = ExcuseForm()
+            # Handle Absence form
+            if (request.POST.get('absence-btn') 
+                and absence_form.is_valid()):
+                absence = absence_form.save(commit=False)
+                absence.account = user_athlete
+                absence.workout = workout
+                absence.team = user_athlete.team
+                absence.save()
+                absence_form = AbsenceForm()
 
 
 
@@ -333,7 +344,7 @@ def workout_detail_view(request, **kwargs):
         'rsvp_conflict': rsvp_conflict,
         'already_rsvped': already_rsvped,
 
-        'excuse_form': excuse_form,
+        'absence_form': absence_form,
         'trigger_modal': trigger_modal,
 
         'rsvpd_athletes': rsvpd_athletes,

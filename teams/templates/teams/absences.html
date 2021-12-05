@@ -6,17 +6,17 @@
 {% endblock scripts %}
 
 {% block title %}
-    Excuses
+    Absences
 {% endblock title %}
 
 {% block content %}
     
-    <h3><strong>Excuses</strong></h3>
+    <h3><strong>Absences</strong></h3>
     <hr>
 
-    <!-- Today's Excuses -->
-    <h5><strong>Excuses for Today</strong></h5>
-    {% for item in todays_excuses %}
+    <!-- Today's Absences -->
+    <h5><strong>Absenses for Today</strong></h5>
+    {% for item in todays_absences %}
         <div class="card mt-3">
             <div class="card-header">
                 <h5>{{item.first_name}} {{item.last_name}}</h5>
@@ -38,9 +38,9 @@
     {% endfor %}
 
     <hr>
-    <!-- Future Excuses-->
-    <h5><strong>Future Excuses</strong></h5>
-    {% for item in future_excuses %}
+    <!-- Future Absences-->
+    <h5><strong>Future Absences</strong></h5>
+    {% for item in future_absences %}
         <div class="card mt-3">
             <div class="card-header">
                 <h5>{{item.first_name}} {{item.last_name}}</h5>
@@ -62,9 +62,9 @@
     {% endfor %}
 
     <hr>
-    <!-- Past Excuses-->
-    <h5><strong>Past Excuses</strong></h5>
-    {% for item in past_excuses %}
+    <!-- Past Absences-->
+    <h5><strong>Past Absences</strong></h5>
+    {% for item in past_absences %}
         <div class="card mt-3">
             <div class="card-header">
                 <h5>{{item.first_name}} {{item.last_name}}</h5>

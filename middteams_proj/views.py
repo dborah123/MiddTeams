@@ -10,7 +10,6 @@ def logout_view(request):
     '''
     handles logout
     '''
-
     logout(request)
     return redirect('login')
 
@@ -31,7 +30,6 @@ def login_view(request):
     account_created = 0
     wrong_team_code = 0
 
-
     # Athlete creation variable initialization
 
     if(request.method == 'POST'):
@@ -45,9 +43,10 @@ def login_view(request):
                 password = form.cleaned_data.get('password')
                 user = authenticate(username=username, password=password)
 
+                # Login user
                 if(user is not None):
                     login(request, user)
-                    
+                    # Redirect user to page they wanted to get to, else send to homepage
                     if(request.GET.get('next')):
                         return redirect(request.GET.get('next'))
                     else:

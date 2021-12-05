@@ -28,6 +28,7 @@ class Coach(models.Model):
     
 
 class Athlete(models.Model):
+    # Athlete specific attributes
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     profile_picture = models.ImageField(upload_to='avatars', default='no_picture.png')

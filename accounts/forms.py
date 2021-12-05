@@ -20,7 +20,6 @@ class CoachCreationForm(forms.Form):
     password = forms.CharField(max_length=200, widget=forms.PasswordInput())
     password_check = forms.CharField(max_length=200, widget=forms.PasswordInput())
     email = forms.EmailField(max_length=200)
-    # profile_picture = forms.ImageField()
     team = forms.ModelChoiceField(queryset=Team.objects.all())
     formal_title = forms.CharField(max_length=200)
     phone_number = forms.CharField(max_length=200)
@@ -39,7 +38,7 @@ class AthleteCreationForm(forms.Form):
 
 
 class CoachForm(forms.ModelForm):
-
+    # For profiles
     class Meta:
         model = Coach
 
@@ -61,7 +60,7 @@ class CoachForm(forms.ModelForm):
 
 
 class AthleteForm(forms.ModelForm):
-
+    # For profiles
     class Meta:
         model = Athlete
 
@@ -82,7 +81,7 @@ class AthleteForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
-
+    # For profiles
     class Meta:
         model = User
 
@@ -93,18 +92,18 @@ class UserForm(forms.ModelForm):
 
 
 class PasswordForm(forms.Form):
+    # For profiles
     old_password = forms.CharField(max_length=200, widget=forms.PasswordInput())
     new_password = forms.CharField(max_length=200, widget=forms.PasswordInput())
     new_password_again = forms.CharField(max_length=200, widget=forms.PasswordInput())
 
 
 class ScheduleItemForm(forms.ModelForm):
-
+    # For schedule page
     day = forms.ChoiceField(choices=DAY_CHOICES, widget=forms.Select(attrs={'class':'form-select'}))
 
     class Meta(object):
         model = ScheduleItem
-
         fields = (
             'name',
             'time_start',

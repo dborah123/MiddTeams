@@ -103,7 +103,7 @@
         </div>
     </div>
 
-        <!-- Excuse Modal-->
+        <!-- Absence Modal-->
     <div class="modal fade" id="cancelModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -115,17 +115,17 @@
                         {% csrf_token %}
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="inputGroupSelect01">Reason</label>
-                            {{excuse_form.reason}}    
+                            {{absence_form.reason}}    
                         </div>
 
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="inputGroupSelect01">Explanation</label>
-                            {{excuse_form.explanation}}    
+                            {{absence_form.explanation}}    
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" value = "1" name="excuse-btn">
-                        Create Excuse
+                    <button type="submit" class="btn btn-primary" value = "1" name="absence-btn">
+                        Create Absence
                     </button>
                 </div>
                     </form>

@@ -3,7 +3,6 @@ def is_availible(form_time_start, form_time_end, form_day, item_time_start, item
     '''
     Tells you if schedule conflicts or not with this time
     '''
-
     # ScheduleItem conflicts with suggested time
     if (form_day == item_day and 
         ((form_time_start <= item_time_start <= form_time_end) or

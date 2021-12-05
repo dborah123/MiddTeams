@@ -2,6 +2,11 @@ from django import forms
 
 from accounts.forms import DAY_CHOICES
 
+'''
+NOTE: Django won't be able to differentiate from 3 of the same type of forms in one view so I must make 3 seperate
+      forms to handle the schedule tool v1
+'''
+
 class ScheduleToolForm0(forms.Form):
     time_start0 = forms.TimeField(required=False)
     time_end0 = forms.TimeField(required=False)

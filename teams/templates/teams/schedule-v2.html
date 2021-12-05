@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Schedule Tool V2
+{% endblock title %}
+
+{% block content %}
+    <h2>Schedule Tool V2</h2>
+
+    <!-- Schedule -->
+    <div id="schedule"></div>
+
+    <div id="calendar"></div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                allDaySlot: false,
+                nowIndicator: true,
+                slotMinTime: "07:00:00",
+                height:600,
+                events: 
+                    {{data|safe}},
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: true
+                }
+            });
+            calendar.render();
+        });
+
+    </script>
+
+{% endblock content %}

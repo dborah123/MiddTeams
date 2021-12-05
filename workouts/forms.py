@@ -1,15 +1,13 @@
 from django import forms
-from django.forms import fields
-from django.forms import widgets
-from django.forms.widgets import NumberInput
-from .models import EXCUSE_OPTIONS, ExcuseRequest, Workout
+from .models import ABSENCE_OPTIONS, ExcuseRequest, Workout
 
 
 class WorkoutCreationForm(forms.ModelForm):
-
+    '''
+    Form for creating workouts
+    '''
     class Meta(object):
         model = Workout
-
         fields = (
             'name',
             'description',
@@ -66,10 +64,11 @@ class WorkoutCreationForm(forms.ModelForm):
 
 
 class WorkoutForm(forms.ModelForm):
-
+    '''
+    Form for displaying and editing already created workouts
+    '''
     class Meta(object):
         model = Workout
-
         fields = (
             'name',
             'description',
@@ -128,6 +127,7 @@ class WorkoutForm(forms.ModelForm):
         }
 
     def __init__(self, *args, disable_fields=False, **kwargs):
+        # NOTE: Depending on user permissions (whether they are owner/coach), fields could be disabled
         super(WorkoutForm, self).__init__(*args, **kwargs)
         self.fields['team'].disabled = True
         self.fields['creator'].disabled = True
@@ -141,9 +141,11 @@ class WorkoutForm(forms.ModelForm):
             self.fields['location'].disabled = True
 
 
-class ExcuseForm(forms.ModelForm):
-
-    reason = forms.ChoiceField(choices=EXCUSE_OPTIONS, widget=forms.Select(attrs={'class':'form-select'}))
+class AbsenceForm(forms.ModelForm):
+    '''
+    Form for filling out an absences
+    '''
+    reason = forms.ChoiceField(choices=ABSENCE_OPTIONS, widget=forms.Select(attrs={'class':'form-select'}))
 
     class Meta:
         model = ExcuseRequest
@@ -162,6 +164,6 @@ class ExcuseForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(ExcuseForm, self).__init__(*args, **kwargs)
+        super(AbsenceForm, self).__init__(*args, **kwargs)
         self.fields['explanation'].label=""
     
