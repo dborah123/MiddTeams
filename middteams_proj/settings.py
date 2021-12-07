@@ -22,7 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("SECRET_KEY")
+# SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = 'django-insecure-#ujp&kf&0ltu&hsc)qipy78awid2!cvj3z35gn41=w#y*0r$=&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -90,7 +91,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'middteamsdb',
         'USER': 'middteams',
-        'PASSWORD': config("DATABASE_PASSWORD"),
+        # 'PASSWORD': config("DATABASE_PASSWORD"),
+        'PASSWORD': 'middteams123',
         'HOST': 'localhost',
         'PORT': '5432',
     }
