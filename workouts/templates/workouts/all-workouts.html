@@ -7,11 +7,14 @@
 {% endblock title %}
 
 {% block content %}
-    <h2>All Workouts</h2>
+    <div>
+        <h2 class="default-header alert alert-primary d-flex justify-content-center">All Workouts</h2>
+    </div>
     <hr>
 
+
     <!-- Today's workouts -->
-    <h4>Today's Workouts</h4>
+    <h3 class="default-header">Today's Workouts</h3>
 
     {% if not current_workouts %}
         <div class="alert alert-secondary">
@@ -23,7 +26,7 @@
         {% for item in current_workouts %}
             <div class="card mt-3">
                 <div class="card-header text-white bg-secondary">
-                    <h3>Workout Name: {{item.name}}</h3>
+                    <h5>Workout Name: {{item.name}}</h5>
                     <a class="stretched-link" href="{% url 'workouts:workout-detail' item.pk %}"></a>
 
                     <div class="d-flex">
@@ -43,7 +46,7 @@
     <hr>
 
     <!-- Future Workouts -->
-    <h4>Upcoming Workouts</h4>
+    <h3 class="default-header">Upcoming Workouts</h3>
 
     {% if not future_workouts %}
         <div class="alert alert-secondary">
@@ -55,7 +58,7 @@
         {% for item in future_workouts %}
             <div class="card mt-3">
                 <div class="card-header text-white bg-secondary">
-                    <h3>Workout Name: {{item.name}}</h3>
+                    <h5>Workout Name: {{item.name}}</h5>
                     <a class="stretched-link" href="{% url 'workouts:workout-detail' item.pk %}"></a>
 
                     <div class="d-flex">
@@ -75,7 +78,7 @@
     <hr>
 
     <!-- Past Workouts -->
-    <h4>Past Workouts</h4>
+    <h3 class="default-header">Past Workouts</h3>
 
     {% if not past_workouts %}
         <div class="alert alert-secondary">
@@ -87,7 +90,7 @@
         {% for item in past_workouts %}
             <div class="card mt-3">
                 <div class="card-header text-white bg-secondary">
-                    <h3>Workout Name: {{item.name}}</h3>
+                    <h5>Workout Name: {{item.name}}</h5>
                     <a class="stretched-link" href="{% url 'workouts:workout-detail' item.pk %}"></a>
 
                     <div class="d-flex">

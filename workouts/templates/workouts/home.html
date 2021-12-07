@@ -15,7 +15,7 @@
     <div id="alert-box-0"></div>
     <div id="perm-alert-box"></div>
 
-    <h2 style="color: #003882;text-align:center">
+    <h2 class="default-header alert alert-primary d-flex justify-content-center">
         {% if time_of_day == 0 %}
             Good morning, 
         {% elif time_of_day == 1 %}
@@ -161,11 +161,6 @@
             </div>
         </div>
     </div>
-
-    {% comment %} <!-- Form for redirect_bool change in view -->
-    <form id="redirect-reset-form" action="" method="POST">
-        <input type="hidden" name="redirect-reset" value="1">
-    </form> {% endcomment %}
 
     <!-- Scripts -->
     <script type="text/javascript">

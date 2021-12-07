@@ -8,3 +8,17 @@
 .nav-title {
     font-size:x-large;
 }
+
+#login-logo {
+    height: 100px;
+}
+
+#login-header {
+    display: inline;
+    color: #003882;
+}
+
+.default-header {
+    color: #003882;
+    font-weight: bold;
+}

@@ -11,11 +11,11 @@
 
 {% block content %}
     
-    <h3><strong>Absences</strong></h3>
+    <h3 class="default-header alert alert-primary d-flex justify-content-center">Absences</h3>
     <hr>
 
     <!-- Today's Absences -->
-    <h5><strong>Absenses for Today</strong></h5>
+    <h4 class="default-header">Absenses for Today</h4>
     {% for item in todays_absences %}
         <div class="card mt-3">
             <div class="card-header">
@@ -39,7 +39,7 @@
 
     <hr>
     <!-- Future Absences-->
-    <h5><strong>Future Absences</strong></h5>
+    <h4 class="default-header">Future Absences</h4>
     {% for item in future_absences %}
         <div class="card mt-3">
             <div class="card-header">
@@ -63,7 +63,7 @@
 
     <hr>
     <!-- Past Absences-->
-    <h5><strong>Past Absences</strong></h5>
+    <h4 class="default-header">Past Absences</h4>
     {% for item in past_absences %}
         <div class="card mt-3">
             <div class="card-header">
