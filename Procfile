@@ -1,0 +1,1 @@
+web: gunicorn middteams_proj.wsgi
