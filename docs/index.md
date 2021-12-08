@@ -1,10 +1,9 @@
 ## [MiddTeams]
-### Middlebury College, Computer Science CSCI 701 (Fall 2020)
+### Middlebury College, Computer Science CSCI 701 (Fall 2021)
 
-See the [help](help.md) for resources on writing your project website.
 
 ### About our project
-TODO
+MiddTeams is a web applications that is meant to handle scheduling for the athletics department at Middlebury. Our aim is to facilitate an easier time for both athletes and coaches in scheduling. Thus, MiddTeams provides teams not only provides workout scheduling, but also the ability to look at the class schedules of other teammates. Lastly, there are also scheduling tools, that with just one click, provide users with the ability to see when the optimal time to schedule is.
 
 See the README in our [project repository](https://github.com/philipclaude/project-website) for information on building and using our software.
 
