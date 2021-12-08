@@ -1,10 +1,9 @@
-## [Middteams]
+## Middteams
 ### Middlebury College, Computer Science CSCI 701 (Fall 2021)
 
 ### about
-Middteams is an application meant to aid communication and scheduling for athletics at Middlebury. Coaches and athletes have the ability to schedule workouts and practices and RSVP for them, increasing transparency in the scheduling process. With this app, we hope that coaches will be able to be better prepared for practice and that athletes will use this app to help balance their schedules between academics and athletics.
-
-view our website [here](https://dborah123.github.io/MiddTeams/)
+MiddTeams is a web applications that is meant to handle scheduling for the athletics department at Middlebury. Our aim is to facilitate an easier time for both athletes and coaches in scheduling. Thus, MiddTeams provides teams not only provides workout scheduling, but also the ability to look at the class schedules of other teammates. Lastly, there are also scheduling tools, that with just one click, provide users with the ability to see when the optimal time to schedule is.
+view our project website [here](https://dborah123.github.io/MiddTeams/)
 
 ### building
 TODO: how can someone build your project, starting from the GitHub clone/download, installing dependencies and compiling.
