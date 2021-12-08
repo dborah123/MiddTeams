@@ -7,6 +7,7 @@ coaches in scheduling. Thus, MiddTeams provides teams not only provides workout 
 are also scheduling tools, that with just one click, provide users with the ability to see when the optimal time to schedule is. in scheduling. Thus, MiddTeams provides teams not
 only provides workout scheduling, but also the ability to look at the class schedules of other teammates. Lastly, there are also scheduling tools, that with just one click,
 provide users with the ability to see when the optimal time to schedule is.
+
 view MiddTeams [here](https://middteams.herokuapp.com/)
 view our project website [here](https://dborah123.github.io/MiddTeams/)
 
