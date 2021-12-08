@@ -8,7 +8,7 @@ are also scheduling tools, that with just one click, provide users with the abil
 only provides workout scheduling, but also the ability to look at the class schedules of other teammates. Lastly, there are also scheduling tools, that with just one click,
 provide users with the ability to see when the optimal time to schedule is.
 
-view MiddTeams [here](https://middteams.herokuapp.com/)
+view MiddTeams [here](https://middteams.herokuapp.com/) Note: team code is '1234' for the (mock) hockey team if you would like to create an account and try it out
 
 view our project website [here](https://dborah123.github.io/MiddTeams/)
 
