@@ -1,4 +1,4 @@
-## [insert project title]
+## [MiddTeams]
 ### Middlebury College, Computer Science CSCI 701 (Fall 2020)
 
 See the [help](help.md) for resources on writing your project website.
