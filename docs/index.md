@@ -1,6 +1,8 @@
 ## MiddTeams
 ### Middlebury College, Computer Science CSCI 701 (Fall 2021)
 
+### [MiddTeams Website](https://middteams.herokuapp.com/)
+Note: team code is 1234 if you would like to test it out
 
 ### About our project
 MiddTeams is a web applications that is meant to handle scheduling for the athletics department at Middlebury. Our aim is to facilitate an easier time for both athletes and coaches in scheduling. Thus, MiddTeams provides teams not only provides workout scheduling, but also the ability to look at the class schedules of other teammates. Lastly, there are also scheduling tools, that with just one click, provide users with the ability to see when the optimal time to schedule is.
