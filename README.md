@@ -9,6 +9,7 @@ only provides workout scheduling, but also the ability to look at the class sche
 provide users with the ability to see when the optimal time to schedule is.
 
 view MiddTeams [here](https://middteams.herokuapp.com/)
+
 view our project website [here](https://dborah123.github.io/MiddTeams/)
 
 ### building
