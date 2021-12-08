@@ -10,14 +10,41 @@ See the README in our [project repository](https://github.com/philipclaude/proje
 ### Notes
 
 - Week 1:
-  - coming up with project idea: XYZ
-  - mostly reading up on background material (found this interesting paper by XYZ)
+  - Brainstorming various ideas for a project
 - Week 2:
-  - we tried X but it doesn't work very well - spent a lot of time on this :(
+  - The idea of MiddTeams is created
+  - Brainstormed various functionalities of the site
+  - Submitted a project proposal
 - Week 3:
-  - didn't do much research because I had a midterm in class XYZ
-- ...
-- Week 10:
-  - it works!!!!!!!!
+  - Research various technologies for the project
+- Week 4:
+  - Set up project and made first commit
+  - Begun making login and profile creation functionalities
+- Week 5:
+  - Polished up account creation and login
+  - Wrote progress report
+- Week 6:
+  - Created profile editing page
+  - Begun work on schedule including researching JS extensions for it
+- Week 7:
+  - Able to make schedule items
+  - Schedule extension works, but not as desired...more research
+  - Implemented FullCalendar js and it works
+- Week 8:
+  - Schedule item details page created, allowing users to edit them
+  - Roster page created with links to other's schedules
+  - Workout page displays workouts
+  - Prototype demo this week too!
+- Week 9:
+  - Workout page now allows users to RSVP, see details of said workout, and edit/delete
+  - Workout page that lists every workout every for the team created
+- Week 10/Thanksgiving Break:
+  - Completed first iteration of the schedule tool
+  - Worked on absences feature of our website. User can record their absence and reason on site
+  - Create absences page that only coaches can view
 - Week 11:
-  - now we need to make sure our plots, paper, and presentation are in line with the effective technical communication guidelines!
+  - Polished website and inputted mock demo data
+  - Final presentation
+- Week 12:
+  - Touched up CSS and deployed onto Heroku
+  - Poster presentation
