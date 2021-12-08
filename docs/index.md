@@ -1,4 +1,4 @@
-## [MiddTeams]
+## MiddTeams
 ### Middlebury College, Computer Science CSCI 701 (Fall 2021)
 
 
